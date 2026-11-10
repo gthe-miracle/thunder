@@ -1,3 +1,7 @@
+## 2.0.2
+
+- Smaller README screenshots so they fit four per row on pub.dev
+
 ## 2.0.1
 
 - Fixed README screenshots not showing on pub.dev and the example link pointing to an outdated branch
