@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Fixed README screenshots not showing on pub.dev and the example link pointing to an outdated branch
+
 ## 2.0.0
 
 - **Breaking:** migrated from `package:flutter/material.dart` and `package:flutter/cupertino.dart` to [`material_ui`](https://pub.dev/packages/material_ui) and [`cupertino_ui`](https://pub.dev/packages/cupertino_ui). Material and Cupertino were decoupled from the Flutter SDK; the in-SDK copy is frozen and scheduled for removal ([flutter/flutter#184093](https://github.com/flutter/flutter/issues/184093), [flutter/flutter#172942](https://github.com/flutter/flutter/issues/172942))

@@ -8,5 +8,5 @@
     "Pana",
     "Unstreamed"
   ],
-  "cmake.sourceDirectory": "/Users/miracle/StudioProjects/libs/thunder/example/windows/runner"
+  "cmake.sourceDirectory": "${workspaceFolder}/example/windows/runner"
 }

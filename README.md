@@ -219,7 +219,7 @@ The overlay shows:
 
 ## Example Project
 
-For a complete working example, check the [example](https://github.com/gthe-miracle/thunder/blob/dev/example/lib/main.dart) directory.
+For a complete working example, check the [example](https://github.com/gthe-miracle/thunder/tree/main/example) directory.
 
 ## Contributing
 
