@@ -1,30 +1,3 @@
-<<<<<<< HEAD
-## 0.2.5
-
-* Pub score fixed
-
-## 0.2.4
-
-* Pub score fixed
-
-## 0.2.3
-
-* Duplicate logs bug fixed
-
-## 0.2.2
-
-* Adding interceptor using Thunder.addDio(dio) method not showing logs bug fixed
-
-## 0.2.1
-
-* Added CopyableText widget to fix system context menu error in console logs
-
-## 0.2.0
-
-* Thunder.addDio(dio) method added
-* Thunder.getDiosHash method added
-* Thunder.getInterceptor method deprecated use Thunder.addDio(dio) instead
-=======
 ## 2.0.0
 
 - **Breaking:** migrated from `package:flutter/material.dart` and `package:flutter/cupertino.dart` to [`material_ui`](https://pub.dev/packages/material_ui) and [`cupertino_ui`](https://pub.dev/packages/cupertino_ui). Material and Cupertino were decoupled from the Flutter SDK; the in-SDK copy is frozen and scheduled for removal ([flutter/flutter#184093](https://github.com/flutter/flutter/issues/184093), [flutter/flutter#172942](https://github.com/flutter/flutter/issues/172942))
@@ -147,7 +120,6 @@
 - Thunder.addDio(dio) method added
 - Thunder.getDiosHash method added
 - Thunder.getInterceptor method deprecated use Thunder.addDio(dio) instead
->>>>>>> fd46cc8f2c73b9c84977f5d2601d99ce87e5ea8d
 
 ## 0.1.1
 
@@ -155,11 +127,7 @@
 
 ## 0.1.0
 
-<<<<<<< HEAD
-* Dart version 3.8.0
-=======
 - Dart version 3.8.0
->>>>>>> fd46cc8f2c73b9c84977f5d2601d99ce87e5ea8d
 
 ## 0.0.9
 
