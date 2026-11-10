@@ -1,14 +1,13 @@
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
+import '../../common/utils/colors.dart';
 import '../../common/utils/helpers.dart';
 import 'copyable_text.dart';
 
 /// Utility class with helper functions for JSON viewing.
-class JsonViewerUtils {
-  const JsonViewerUtils._();
-
+class const JsonViewerUtils._() {
   /// Returns true if [content] is expandable (i.e. a Map or List).
   static bool isExpandable(Object? content) =>
       content is Map || content is List;
@@ -30,20 +29,21 @@ class JsonViewerUtils {
   }
 }
 
-/// Main widget that displays a
-/// JSON structure in a hierarchical and interactive way.
-class JsonViewer extends StatelessWidget {
-  /// Constructor for the [JsonViewer] class.
-  const JsonViewer(this.jsonObj, {super.key});
-
+/// Main widget that displays a JSON structure in a
+/// hierarchical and interactive way.
+class const JsonViewer(
   /// The JSON object to display
-  final Object? jsonObj;
+  final Object? jsonObj, {
+  super.key,
+}) extends StatelessWidget {
+  /// Constructor for the [JsonViewer] class.
+  this;
 
   @override
   Widget build(BuildContext context) => _buildContent(jsonObj);
 
-  /// Determines the type of
-  /// JSON content and delegates to the appropriate viewer.
+  /// Determines the type of JSON content and
+  /// delegates to the appropriate viewer.
   Widget _buildContent(Object? content) {
     if (content == null) return const CopyableText(value: '{}');
 
@@ -57,19 +57,16 @@ class JsonViewer extends StatelessWidget {
 }
 
 /// Widget for viewing JSON objects (Maps).
-class JsonObjectViewer extends StatefulWidget {
-  /// Constructor for the [JsonObjectViewer] class.
-  const JsonObjectViewer({
-    required this.jsonObj,
-    super.key,
-    this.notRoot = false,
-  });
-
+class const JsonObjectViewer({
   /// The JSON object to display
-  final Map<String, Object?> jsonObj;
+  required final Map<String, Object?> jsonObj,
+  super.key,
 
   /// Whether the JSON object is not the root object
-  final bool notRoot;
+  final bool notRoot = false,
+}) extends StatefulWidget {
+  /// Constructor for the [JsonObjectViewer] class.
+  this;
 
   @override
   JsonObjectViewerState createState() => JsonObjectViewerState();
@@ -82,9 +79,9 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildContentList(),
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: _buildContentList(),
+  );
 
   /// Builds a list of rows representing each key-value pair.
   List<Widget> _buildContentList() =>
@@ -111,7 +108,7 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                       _openFlags[key] ?? false
                           ? Icons.arrow_drop_down
                           : Icons.arrow_right,
-                      color: Colors.grey[700],
+                      color: ThunderColors.of(context).gray,
                     ),
                   )
                 else
@@ -120,13 +117,19 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                 // Display key.
                 CopyableText(
                   value: key,
-                  style: TextStyle(
-                    color: value == null ? Colors.grey : Colors.black,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: value == null
+                        ? Colors.grey
+                        : ThunderColors.of(context).cBlack,
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
                 ),
-                const Text(':', style: TextStyle(color: Colors.grey)),
+                Text(
+                  ':',
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: Colors.grey),
+                ),
 
                 // Value preview.
                 Expanded(child: _buildValuePreview(key, value)),
@@ -147,24 +150,28 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
   /// Returns a widget showing a preview for the given [value].
   Widget _buildValuePreview(String key, Object? value) {
     if (value == null) {
-      return const CopyableText(
+      return CopyableText(
         value: 'undefined',
-        style: TextStyle(color: Colors.grey, fontSize: 12),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: Colors.grey, fontSize: 12),
       );
     } else if (value is int || value is double) {
       return CopyableText(
         value: value.toString(),
-        style: const TextStyle(color: Color(0xff6491b3), fontSize: 12),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: const Color(0xff6491b3), fontSize: 12),
       );
     } else if (value is String) {
       return CopyableText(
         value: '"$value"',
-        style: const TextStyle(color: Color(0xff6a8759), fontSize: 12),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: const Color(0xff6a8759), fontSize: 12),
       );
     } else if (value is bool) {
       return CopyableText(
         value: value.toString(),
-        style: const TextStyle(color: Color(0xffca7832), fontSize: 12),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: const Color(0xffca7832), fontSize: 12),
       );
     } else if (value is List) {
       if (value.isEmpty) {
@@ -177,7 +184,8 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
       }
       return _buildCopyableText(
         context: context,
-        text: 'Array<'
+        text:
+            'Array<'
             '${JsonViewerUtils.getTypeName(value.first)}'
             '>['
             '${value.length}'
@@ -201,14 +209,16 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
     required BuildContext context,
     required String text,
     required VoidCallback onTap,
-  }) =>
-      GestureDetector(
-        onTap: onTap,
-        onDoubleTap: () =>
-            Helpers.copyAndShowSnackBar(context, contentToCopy: text),
-        child: Text(text,
-            style: const TextStyle(color: Colors.grey, fontSize: 12)),
-      );
+  }) => InkWell(
+    onTap: onTap,
+    onDoubleTap: () =>
+        Helpers.copyAndShowSnackBar(context, contentToCopy: text),
+    child: Text(
+      text,
+      style: Theme.of(context).textTheme.bodySmall
+          ?.copyWith(color: Colors.grey, fontSize: 12),
+    ),
+  );
 
   /// Returns a widget for nested JSON content.
   Widget _buildContentWidget(Object? content) {
@@ -222,19 +232,16 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
 }
 
 /// Widget for viewing JSON arrays (Lists).
-class JsonArrayViewer extends StatefulWidget {
-  /// Constructor for the [JsonArrayViewer] class.
-  const JsonArrayViewer({
-    required this.jsonArray,
-    super.key,
-    this.notRoot = false,
-  });
-
+class const JsonArrayViewer({
   /// The JSON array to display
-  final List<Object?> jsonArray;
+  required final List<Object?> jsonArray,
+  super.key,
 
   /// Whether the JSON array is not the root array
-  final bool notRoot;
+  final bool notRoot = false,
+}) extends StatefulWidget {
+  /// Constructor for the [JsonArrayViewer] class.
+  this;
 
   @override
   State<JsonArrayViewer> createState() => _JsonArrayViewerState();
@@ -281,20 +288,26 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                     borderRadius: BorderRadius.circular(16),
                     child: Icon(
                       _openFlags[i] ? Icons.arrow_drop_down : Icons.arrow_right,
-                      color: Colors.grey[700],
+                      color: ThunderColors.of(context).gray,
                     ),
                   )
                 else
                   const SizedBox(width: 24),
                 CopyableText(
                   value: '[$i]',
-                  style: TextStyle(
-                    color: value == null ? Colors.grey : Colors.black,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: value == null
+                        ? Colors.grey
+                        : ThunderColors.of(context).cBlack,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
                 ),
-                const Text(': ', style: TextStyle(color: Colors.grey)),
+                Text(
+                  ': ',
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: Colors.grey),
+                ),
                 Expanded(child: _buildValuePreview(i, value)),
               ],
             ),
@@ -311,24 +324,28 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
   /// Returns a preview widget for the array element at [index].
   Widget _buildValuePreview(int index, Object? value) {
     if (value == null) {
-      return const CopyableText(
+      return CopyableText(
         value: 'undefined',
-        style: TextStyle(color: Colors.grey),
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: Colors.grey),
       );
     } else if (value is int || value is double) {
       return CopyableText(
         value: value.toString(),
-        style: const TextStyle(color: Color(0xff6491b3)),
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: const Color(0xff6491b3)),
       );
     } else if (value is String) {
       return CopyableText(
         value: '"$value"',
-        style: const TextStyle(color: Color(0xff6a8759)),
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: const Color(0xff6a8759)),
       );
     } else if (value is bool) {
       return CopyableText(
         value: value.toString(),
-        style: const TextStyle(color: Color(0xffca7832)),
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: const Color(0xffca7832)),
       );
     } else if (value is List) {
       if (value.isEmpty) {
@@ -340,7 +357,8 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
       }
       return _buildCopyableText(
         context: context,
-        text: 'Array<'
+        text:
+            'Array<'
             '${JsonViewerUtils.getTypeName(value.first)}'
             '>['
             '${value.length}'
@@ -361,13 +379,16 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
     required BuildContext context,
     required String text,
     required VoidCallback onTap,
-  }) =>
-      InkWell(
-        onTap: onTap,
-        onDoubleTap: () =>
-            Helpers.copyAndShowSnackBar(context, contentToCopy: text),
-        child: Text(text, style: const TextStyle(color: Colors.grey)),
-      );
+  }) => InkWell(
+    onTap: onTap,
+    onDoubleTap: () =>
+        Helpers.copyAndShowSnackBar(context, contentToCopy: text),
+    child: Text(
+      text,
+      style: Theme.of(context).textTheme.bodyMedium
+          ?.copyWith(color: Colors.grey),
+    ),
+  );
 
   /// Returns a widget for nested JSON content.
   Widget _buildContentWidget(Object? content) {

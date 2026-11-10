@@ -1,51 +1,48 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'dart:ui' show Color;
 
+import 'package:flutter/foundation.dart';
+
+import '../extension/middleware_extensions.dart';
 import '../extension/string_extension.dart';
 
 /// Model class to store network request/response data
 @immutable
-final class ThunderNetworkLog {
-  /// Constructor for the [ThunderNetworkLog] class.
-  ThunderNetworkLog({
-    required this.request,
-    required this.isLoading,
-    this.sendTime,
-    this.receiveTime,
-    this.sendBytes,
-    this.receiveBytes,
-    this.response,
-    this.error,
-    this.duration,
-    String? id,
-  }) : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
-
-  /// The time when the request was sent
-  final DateTime? sendTime;
-
-  /// The time when the request was received
-  final DateTime? receiveTime;
-
+// Not const-able (`id` defaults to now); the lint misses the `this :` list.
+// ignore: prefer_const_constructors_in_immutables
+final class ThunderNetworkLog({
   /// The request options
-  final RequestOptions request;
-
-  /// The response
-  final Response<Object?>? response;
-
-  /// The error
-  final DioException? error;
-
-  /// The duration of the request
-  final Duration? duration;
+  required final ApiClientRequest request,
 
   /// Whether the request is loading
-  final bool isLoading;
+  required final bool isLoading,
+
+  /// The time when the request was sent
+  final DateTime? sendTime,
+
+  /// The time when the request was received
+  final DateTime? receiveTime,
 
   /// The number of bytes sent
-  final int? sendBytes;
+  final int? sendBytes,
 
   /// The number of bytes received
-  final int? receiveBytes;
+  final int? receiveBytes,
+
+  /// The response
+  final ApiClientResponse? response,
+
+  /// The error
+  final Object? error,
+
+  /// The duration of the request
+  final Duration? duration,
+
+  /// The status code
+  final int? statusCode,
+  String? id,
+}) {
+  /// Constructor for the [ThunderNetworkLog] class.
+  this : id = id ?? DateTime.now().microsecondsSinceEpoch.toString();
 
   /// UUID of the log
   final String id;
@@ -60,26 +57,27 @@ final class ThunderNetworkLog {
   ThunderNetworkLog copyWith({
     DateTime? sendTime,
     DateTime? receiveTime,
-    RequestOptions? request,
-    Response<Object?>? response,
-    DioException? error,
+    ApiClientRequest? request,
+    ApiClientResponse? response,
+    Object? error,
     Duration? duration,
     int? sendBytes,
     int? receiveBytes,
     bool? isLoading,
-  }) =>
-      ThunderNetworkLog(
-        sendTime: sendTime ?? this.sendTime,
-        receiveTime: receiveTime ?? this.receiveTime,
-        request: request ?? this.request,
-        response: response ?? this.response,
-        error: error ?? this.error,
-        duration: duration ?? this.duration,
-        isLoading: isLoading ?? this.isLoading,
-        sendBytes: sendBytes ?? this.sendBytes,
-        receiveBytes: receiveBytes ?? this.receiveBytes,
-        id: id,
-      );
+    int? statusCode,
+  }) => ThunderNetworkLog(
+    sendTime: sendTime ?? this.sendTime,
+    receiveTime: receiveTime ?? this.receiveTime,
+    request: request ?? this.request,
+    response: response ?? this.response,
+    error: error ?? this.error,
+    duration: duration ?? this.duration,
+    isLoading: isLoading ?? this.isLoading,
+    sendBytes: sendBytes ?? this.sendBytes,
+    receiveBytes: receiveBytes ?? this.receiveBytes,
+    id: id,
+    statusCode: statusCode ?? this.statusCode,
+  );
 
   @override
   bool operator ==(Object other) {
@@ -95,7 +93,8 @@ final class ThunderNetworkLog {
         other.duration == duration &&
         other.isLoading == isLoading &&
         other.sendBytes == sendBytes &&
-        other.receiveBytes == receiveBytes;
+        other.receiveBytes == receiveBytes &&
+        other.statusCode == statusCode;
   }
 
   @override
@@ -109,10 +108,12 @@ final class ThunderNetworkLog {
       duration.hashCode ^
       isLoading.hashCode ^
       sendBytes.hashCode ^
-      receiveBytes.hashCode;
+      receiveBytes.hashCode ^
+      statusCode.hashCode;
 
   @override
-  String toString() => 'ThunderNetworkLog('
+  String toString() =>
+      'ThunderNetworkLog('
       'timestamp: $sendTime, '
       'request: $request, '
       'response: $response, '
@@ -121,5 +122,6 @@ final class ThunderNetworkLog {
       'isLoading: $isLoading, '
       'id: $id, '
       'sendBytes: $sendBytes, '
-      'receiveBytes: $receiveBytes)';
+      'receiveBytes: $receiveBytes, '
+      'statusCode: $statusCode)';
 }

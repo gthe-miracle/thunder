@@ -1,19 +1,20 @@
-import 'dart:convert' show jsonEncode;
+import 'package:http/http.dart';
 
-import 'package:dio/dio.dart' show RequestOptions, FormData;
+import 'middleware_extensions.dart';
+import 'object_extension.dart';
 
-/// Extension on [RequestOptions] to convert to a curl command string.
+/// Extension on [ApiClientRequest] to convert to a curl command string.
 ///
 /// Example:
 /// ```shell
 /// curl -X 'GET' \
 /// 	 'https://jsonplaceholder.typicode.com/posts?test=1'
 // ```
-extension CurlExtension on RequestOptions {
+extension CurlExtension on ApiClientRequest {
   /// Convert the request options to a complete curl command string
-  String toCurlString() {
+  String toCurlString({required bool addBacktick}) {
     final curl = StringBuffer("curl -X '$method'")
-      ..write(" \\\n\t '${uri.toString()}'");
+      ..write(" \\\n\t '${url.toString()}'");
 
     // Add all headers
     headers.forEach((k, v) {
@@ -22,19 +23,24 @@ extension CurlExtension on RequestOptions {
       }
     });
 
-    // check have data
-    if (data == null) return '```shell\n$curl\n```';
+    final request = this as Request;
 
-    // FormData can't be JSON-serialized, so keep only their fields attributes
-    if (data is FormData) {
-      data = Map.fromEntries((data as FormData).fields);
+    // check have data
+    if (request.bodyBytes.isEmpty) {
+      return addBacktick ? '```shell\n$curl\n```' : curl.toString();
     }
 
-    curl.write(" \\\n\t  -d '${jsonEncode(data)}'");
+    // TODO: (Miracle) handle multipart/form-data
+    // FormData can't be JSON-serialized, so keep only their fields attributes
+    // if (request.bodyBytes.isNotEmpty) {
+    //   curl.write(" \\\n\t  -d '${jsonEncode(request.bodyBytes)}'");
+    // }
 
-    return '```shell\n$curl\n```';
+    curl.write(" \\\n\t  -d '${request.body.prettyJsonEncodedBody}'");
+
+    return addBacktick ? '```shell\n$curl\n```' : curl.toString();
   }
 
   /// Convert to a single line curl command (for logging/copying)
-  String toCompactCurlString() => toCurlString().replaceAll(' \\\n\t  ', ' ');
+  // String toCompactCurlString() => toCurlString().replaceAll(' \\\n\t  ', ' ');
 }

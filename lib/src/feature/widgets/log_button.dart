@@ -1,40 +1,59 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/extension/curl_extension.dart';
 import '../../common/extension/duration_extension.dart';
 import '../../common/models/thunder_network_log.dart';
-import '../../common/utils/app_colors.dart';
+import '../../common/utils/colors.dart';
+import '../../common/utils/date_time_extension.dart';
 import '../../common/utils/helpers.dart';
 
 /// A widget that displays a button for a network log.
-class LogButton extends StatelessWidget {
-  /// Constructor for the [LogButton] class.
-  const LogButton({required this.log, required this.onLogTap, super.key});
-
+class const LogButton({
   /// The network log to display
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
 
   /// The function to call when the log button is pressed.
-  final void Function(ThunderNetworkLog log) onLogTap;
+  required final void Function(ThunderNetworkLog log) onLogTap,
+  super.key,
+}) extends StatelessWidget {
+  /// Constructor for the [LogButton] class.
+  this;
 
-  /// Method to get the request time duration
-  String get requestTimeDuration {
-    final sendTime =
-        DateFormat('HH:mm:ss:SSS').format(log.sendTime ?? DateTime.now());
-    final receiveTime = log.duration.formatCompactDuration;
+  String get _requestTimeDuration {
+    final requestTime = (log.sendTime ?? DateTime.now()).formatHHmmssSSS;
+    final duration = log.duration?.formatCompactDuration ?? '';
+    return requestTime + (log.isLoading ? '' : ' │ $duration');
+  }
 
-    return '$sendTime${log.isLoading ? '' : '  │  $receiveTime'}';
+  /// Method that handles the long press on the log button.
+  void _onLongPress(BuildContext context, LongPressStartDetails details) {
+    final localDx = details.localPosition.dx;
+
+    final renderObject = context.findRenderObject();
+
+    if (renderObject case final RenderBox renderBox) {
+      final threshold = renderBox.size.width * 0.5;
+
+      Helpers.copyAndShowSnackBar(
+        context,
+        contentToCopy: log.request.toCurlString(
+          addBacktick: localDx <= threshold,
+        ),
+      );
+    }
   }
 
   @override
-  Widget build(BuildContext context) => CupertinoButton(
+  Widget build(BuildContext context) {
+    final colors = ThunderColors.of(context);
+    final textTheme = Theme.of(context).textTheme;
+    final statusCode = Helpers.getStatusCode(log);
+
+    return GestureDetector(
+      onLongPressStart: (details) => _onLongPress(context, details),
+      child: CupertinoButton(
         onPressed: () => onLogTap(log),
-        onLongPress: () => Helpers.copyAndShowSnackBar(
-          context,
-          contentToCopy: log.request.toCurlString(),
-        ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         child: Material(
           elevation: 3,
@@ -51,15 +70,15 @@ class LogButton extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (log.request.baseUrl.isNotEmpty)
+                if (log.request.url.host.isNotEmpty)
                   Row(
                     children: [
                       /// For secure request
-                      if (log.request.baseUrl.contains('https')) ...[
-                        const Icon(
+                      if (log.request.url.scheme == 'https') ...[
+                        Icon(
                           Icons.lock_outline_rounded,
                           size: 10,
-                          color: AppColors.red,
+                          color: colors.cRed,
                         ),
                         const SizedBox(width: 4),
                       ],
@@ -67,9 +86,9 @@ class LogButton extends StatelessWidget {
                       /// Request Base URL
                       Expanded(
                         child: Text(
-                          log.request.baseUrl,
-                          style: const TextStyle(
-                            color: AppColors.grayRussian,
+                          log.request.url.host,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colors.gray,
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
@@ -86,11 +105,11 @@ class LogButton extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        log.request.path,
+                        log.request.url.path,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: AppColors.lavaStone,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colors.brilliantAzure,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),
@@ -100,11 +119,12 @@ class LogButton extends StatelessWidget {
                     /// Request Size
                     if (!log.isLoading)
                       Text(
-                        '${Helpers.formatBytes(log.sendBytes)} / ${Helpers.formatBytes(log.receiveBytes)}',
-                        style: const TextStyle(
+                        '${Helpers.formatBytes(log.sendBytes)}'
+                        ' / ${Helpers.formatBytes(log.receiveBytes)}',
+                        style: textTheme.bodySmall?.copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.black,
+                          color: colors.cBlack,
                         ),
                       ),
                   ],
@@ -124,8 +144,8 @@ class LogButton extends StatelessWidget {
                       ),
                       child: Text(
                         log.request.method,
-                        style: const TextStyle(
-                          color: AppColors.white,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colors.cWhite,
                           fontWeight: FontWeight.w500,
                           fontSize: 11,
                         ),
@@ -135,40 +155,34 @@ class LogButton extends StatelessWidget {
 
                     /// Request Time | Request duration
                     Text(
-                      requestTimeDuration,
-                      style: const TextStyle(
+                      _requestTimeDuration,
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.black,
+                        color: colors.cBlack,
                       ),
                     ),
 
                     switch (log.isLoading) {
                       true => SizedBox(
-                          height: 16,
-                          width: 16,
-                          child: CircularProgressIndicator(
-                            color: log.methodColor,
-                            strokeCap: StrokeCap.round,
-                            strokeWidth: 3,
-                          ),
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator(
+                          color: log.methodColor,
+                          strokeCap: StrokeCap.round,
+                          strokeWidth: 3,
                         ),
+                      ),
                       false => Text(
-                          log.response?.statusCode.toString() ??
-                              log.error?.response?.statusCode.toString() ??
-                              'null',
-                          style: TextStyle(
-                            color: switch (log.response?.statusCode) {
-                              _
-                                  when 200 <= (log.response?.statusCode ?? 0) &&
-                                      (log.response?.statusCode ?? 0) < 300 =>
-                                const Color(0xFF2ccc84),
-                              _ => AppColors.red,
-                            },
-                            fontWeight: FontWeight.w700,
-                            // fontSize: 15,
-                          ),
+                        statusCode,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: switch (int.tryParse(statusCode)) {
+                            int i when i >= 200 && i < 300 => colors.cGreen,
+                            _ => colors.cRed,
+                          },
+                          fontWeight: FontWeight.w700,
                         ),
+                      ),
                     },
                   ],
                 ),
@@ -176,5 +190,7 @@ class LogButton extends StatelessWidget {
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }

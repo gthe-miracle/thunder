@@ -1,21 +1,23 @@
 # Thunder ⚡️
 
-A powerful Flutter debug overlay for monitoring network requests in real-time. Thunder provides a convenient slide-out panel that shows all network interactions from your Dio HTTP clients.
+A powerful Flutter debug overlay for monitoring network requests in real-time. Thunder provides a convenient slide-out panel that shows all network interactions from your `package:http`-based clients and WebSockets.
 
 <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px;">
-  <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_1.png" width="200" alt="Thunder Overview">
-  <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_2.png" width="200" alt="Thunder Request Details">
-  <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_3.png" width="200" alt="Thunder Response View">
-  <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_4.png" width="200" alt="Thunder Search Feature">
-  <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_5.png" width="200" alt="Thunder Search Feature">
-  <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_6.png" width="200" alt="Thunder Search Feature">
+  <img src="https://github.com/gthe-miracle/thunder/blob/http_client/screenshots/screenshot_1.png" width="200" alt="Thunder Overview">
+  <img src="https://github.com/gthe-miracle/thunder/blob/http_client/screenshots/screenshot_2.png" width="200" alt="Thunder Request Details">
+  <img src="https://github.com/gthe-miracle/thunder/blob/http_client/screenshots/screenshot_3.png" width="200" alt="Thunder Response View">
+  <img src="https://github.com/gthe-miracle/thunder/blob/http_client/screenshots/screenshot_4.png" width="200" alt="Thunder Search Feature">
+  <img src="https://github.com/gthe-miracle/thunder/blob/http_client/screenshots/screenshot_5.png" width="200" alt="Thunder Search Feature">
+  <img src="https://github.com/gthe-miracle/thunder/blob/http_client/screenshots/screenshot_6.png" width="200" alt="Thunder Search Feature">
+  <img src="https://github.com/gthe-miracle/thunder/blob/http_client/screenshots/screenshot_7.png" width="200" alt="Thunder Socket Sessions">
+  <img src="https://github.com/gthe-miracle/thunder/blob/http_client/screenshots/screenshot_8.png" width="200" alt="Thunder Socket Session Timeline">
 </div>
-
 
 ## Features
 
 - 📱 **Simple Integration** - Add a single widget to your app
-- 📈 **Network Monitoring** - Track all requests and responses from Dio instances
+- 📈 **Network Monitoring** - Track all requests and responses via a middleware for `package:http`-based clients
+- 🔌 **WebSocket Monitoring** - Reconnecting `SocketClient` plus a Socket tab with a live per-connection event timeline
 - 🔎 **Search & Filter** - Easily find specific network calls
 - 🗑️ **Clear Logs** - One-tap to remove all logs
 - 👆 **Interactive UI** - Slide-out panel with intuitive controls
@@ -24,9 +26,17 @@ A powerful Flutter debug overlay for monitoring network requests in real-time. T
 
 ## Platform Support
 
-| Android |  iOS  | MacOS |  Web  | Linux | Windows |
-| :-----: | :---: | :---: | :---: | :---: | :-----: |
-|✅|✅|✅|✅|✅|✅|
+| Android | iOS | MacOS | Web | Linux | Windows |
+| :-----: | :-: | :---: | :-: | :---: | :-----: |
+|   ✅    | ✅  |  ✅   | ✅  |  ✅   |   ✅    |
+
+## Requirements
+
+- Flutter `>=3.47.0`, Dart `^3.13.0`
+- Thunder's panel is built with
+  [`material_ui`](https://pub.dev/packages/material_ui), the Material library
+  that was decoupled from the Flutter SDK. Use Thunder 1.x if your app is
+  still on an older Flutter release.
 
 ## Installation
 
@@ -34,7 +44,7 @@ Add Thunder to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  thunder: ^1.0.0  # Replace with actual version
+  thunder: ^2.0.0
 ```
 
 Then run:
@@ -47,54 +57,126 @@ flutter pub get
 
 ### Basic Setup
 
-Wrap your app with the `Thunder` widget to start monitoring network requests:
+Wrap your app with the `Thunder` widget and plug `Thunder.middleware` into
+your `package:http`-based client's middleware chain. Thunder exports the
+middleware types (`ApiClientMiddleware`, `ApiClientHandler`,
+`ApiClientRequest`, `ApiClientResponse`);
 
 ```dart
+import 'package:material_ui/material_ui.dart';
 import 'package:thunder/thunder.dart';
-import 'package:dio/dio.dart';
 
 void main() {
-  // Your Dio instances
-  final dio1 = Dio();
-  final dio2 = Dio(BaseOptions(baseUrl: 'https://api.example.com'));
+  final client = ApiClient(
+    uri: Uri.parse('https://jsonplaceholder.typicode.com'),
+    middlewares: <ApiClientMiddleware>[Thunder.middleware],
+  );
 
-  runApp(MyApp(dio1: dio1, dio2: dio2));
+  runApp(MyApp(client: client));
 }
 
 class MyApp extends StatelessWidget {
-  final Dio dio1;
-  final Dio dio2;
+  const MyApp({required this.client, super.key});
 
-  const MyApp({required this.dio1, required this.dio2, super.key});
+  final ApiClient client;
 
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: 'My App',
     home: const HomePage(),
-    builder: (context, child) => Thunder(
-      dio: [dio1, dio2],
-      child: child ?? const SizedBox.shrink(),
-    ),
+    builder: (context, child) =>
+        Thunder(child: child ?? const SizedBox.shrink()),
   );
 }
 ```
-### Alternative Setup
 
-You can also add the Thunder interceptor directly to your Dio instance:
-```dart
-final Dio jsonPlaceholderDio = Thunder.addDio(
-  Dio(BaseOptions(baseUrl: 'https://jsonplaceholder.typicode.com')),
-);
-```
+`Thunder.middleware` works even before a `Thunder` widget is created, so the
+client can be constructed anywhere — requests made before the overlay mounts
+are captured once it appears.
+
+### Pausing collection
+
+Set `Thunder.middlewareEnabled = false` to turn the middleware into a pure
+pass-through: requests flow unchanged and nothing is collected or shown in
+the panel. Set it back to `true` to resume. Socket interceptors have the
+same switch — `Thunder.socketClient(enabled: false)` /
+`Thunder.webSocketInterceptor(enabled: false)` at creation time, or flip
+`enabled` on a `ThunderWebSocketInterceptor` at runtime.
 
 ### How to Use
 
 1. Run your app in debug mode
-2. Tap the green handle on the left side of the screen to reveal the Thunder panel
+2. Tap the handle on the left side of the screen to reveal the Thunder panel
 3. Make network requests in your app to see them appear in the panel
 4. Use the search button to find specific requests
 5. Use the filter button to sort requests
 6. Use the delete button to clear all logs
+
+## WebSocket Monitoring
+
+Thunder ships a reconnecting WebSocket client built on
+[`web_socket_channel`](https://pub.dev/packages/web_socket_channel) `^3.0.3`.
+Create it through `Thunder.socketClient` and the whole connection lifecycle —
+sent/received frames, state transitions, errors — is recorded as a session in
+the **Socket** tab of the overlay:
+
+```dart
+final socket = Thunder.socketClient(
+  uri: Uri.parse('wss://echo.websocket.org'),
+  label: 'Echo demo',                              // optional session name
+  reconnectInterval: const Duration(seconds: 3),
+  connectTimeout: const Duration(seconds: 10),
+);
+
+socket.states.listen((state) => print('state: $state'));
+socket.messages.listen((message) => print('message: $message'));
+
+await socket.connect();
+socket.send('hello');
+
+// close() is final: the client stops reconnecting and both streams
+// complete. Create a new client to connect again.
+await socket.close();
+```
+
+The client reconnects indefinitely (spaced by `reconnectInterval`) until
+`close()` is called, and `connect()` never throws on a failed dial — watch
+the `states` stream (`SocketConnecting`, `SocketConnected`,
+`SocketReconnecting`, `SocketDisconnected`) for the outcome.
+
+### Monitoring a self-managed WebSocket
+
+If you already manage your own channel (plain `web_socket_channel`, STOMP,
+GraphQL subscriptions, ...), attach only the logging hook. One interceptor
+equals one session row in the Socket tab:
+
+```dart
+final logger = Thunder.webSocketInterceptor(uri: uri);
+final channel = WebSocketChannel.connect(uri);
+
+logger.logState(const SocketConnecting());
+await channel.ready;
+logger.logState(const SocketConnected());
+
+channel.stream.listen(logger.logReceived);
+
+logger.logSent('hello');
+channel.sink.add('hello');
+```
+
+### The Socket tab
+
+The overlay's **HTTP** and **Socket** tabs work independently, each with its
+own empty state. The Socket tab shows one row per connection — URI, a live
+state dot, `↑ sent` / `↓ received` counters, total bytes and the last
+activity time. Tapping a session opens its chronological timeline where
+frames render as aligned cards and state/error events as centered pills.
+Long-press any timeline row to copy its message text; the floating button
+copies the whole session transcript. The toolbar is tab-aware: search
+filters the visible section and the delete button clears only it.
+
+> **Platform note:** `headers` and `pingInterval` only apply on `dart:io`
+> platforms (Android, iOS, desktop) — browser WebSockets don't support them.
 
 ## Configuration
 
@@ -102,17 +184,18 @@ Thunder can be customized with these parameters:
 
 ```dart
 Thunder(
-  // List of Dio instances to monitor
-  dio: [dio1, dio2],
-
   // Optional: Enable/disable the overlay (defaults to kDebugMode)
-  enable: true,
+  enabled: true,
 
   // Optional: Animation duration for the slide-out panel
   duration: const Duration(milliseconds: 250),
 
-  // Optional: Color of the overlay
+  // Optional: Color of the handle
   color: Colors.green,
+
+  // Optional: Panel font family (defaults to 'FreeMono'); it must be
+  // declared in your app's pubspec.yaml, otherwise the platform font is used
+  fontFamily: 'FreeMono',
 
   // Required: Your app's main widget
   child: yourAppWidget,
@@ -121,20 +204,22 @@ Thunder(
 
 ## How It Works
 
-Thunder attaches to your Dio instances and intercepts all network requests and responses. The data is displayed in a user-friendly interface that can be accessed by tapping the handle on the side of your app.
+Every request flowing through `Thunder.middleware` is captured — request,
+response, error and timing — and displayed in a user-friendly interface that
+can be accessed by tapping the handle on the side of your app.
 
 The overlay shows:
+
 - Request method (GET, POST, PUT, DELETE, etc.)
 - URL
 - Status code
 - Response time
 - Request and response headers
-- Request and response bodies
-- HTML response body
+- Request and response bodies (HTML bodies are detected and flagged, not rendered)
 
 ## Example Project
 
-For a complete working example, check the [example](https://github.com/Miracle-Blue/thunder/blob/dev/example/lib/main.dart) directory.
+For a complete working example, check the [example](https://github.com/gthe-miracle/thunder/blob/dev/example/lib/main.dart) directory.
 
 ## Contributing
 
@@ -150,4 +235,4 @@ Contributions are welcome! If you find a bug or want a feature, please:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/Miracle-Blue/thunder/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/gthe-miracle/thunder/blob/main/LICENSE) file for details.

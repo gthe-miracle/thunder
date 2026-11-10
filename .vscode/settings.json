@@ -1,7 +1,12 @@
 {
   "dart.lineLength": 80,
   "cSpell.words": [
-    "Dios",
-    "pana"
+    "Cupertino",
+    "DDMMYYYYH",
+    "endtemplate",
+    "Hmmss",
+    "Pana",
+    "Unstreamed"
   ],
+  "cmake.sourceDirectory": "/Users/miracle/StudioProjects/libs/thunder/example/windows/runner"
 }

@@ -1,9 +1,10 @@
 import '../extension/duration_extension.dart';
+import '../extension/middleware_extensions.dart';
 import '../extension/object_extension.dart';
 import '../models/thunder_network_log.dart';
 
-/// Class that helps convert the
-/// [ThunderNetworkLog] to a copyable log data string
+/// Class that helps convert the [ThunderNetworkLog] to a
+/// copyable log data string
 ///
 /// Example:
 /// Server: jsonplaceholder.typicode.com
@@ -61,48 +62,56 @@ import '../models/thunder_network_log.dart';
 ///   "name": "John Doe",
 ///   "isJson": true
 /// }
-class CopyLogData {
-  /// Constructor for the [CopyLogData] class.
-  const CopyLogData({required this.log});
-
+class const CopyLogData({
   /// The log to convert to a copyable log data string
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
+}) {
+  /// Constructor for the [CopyLogData] class.
+  this;
+
   static final _lines = '─' * 15;
 
   String get _requestHeaders => switch (log.request.headers.isNotEmpty) {
-        true =>
-          'Request headers: ```json\n${log.request.headers.prettyJson}```\n',
-        false => '\r',
-      };
+    true => 'Request headers: ```json\n${log.request.headers.prettyJson}```\n',
+    false => '\r',
+  };
 
   String get _queryParams =>
-      switch (log.request.uri.queryParameters.isNotEmpty) {
-        true => 'Request query params: '
-            '```json\n${log.request.uri.queryParameters.prettyJson}```\n',
-        false => '\r',
-      };
-
-  String get _requestBody => switch (log.request.data != null) {
-        true => 'Request body: '
-            '```json\n${(log.request.data as Object?).prettyJson}```\n',
-        false => '\r',
-      };
-
-  String get _responseBody => switch (log.response?.data != null) {
+      switch (log.request.url.queryParameters.isNotEmpty) {
         true =>
-          'Response body: ```json\n${(log.response?.data).prettyJson}```\n',
+          'Request query params: '
+              '```json\n${log.request.url.queryParameters.prettyJson}```\n',
         false => '\r',
       };
+
+  String get _requestBody => switch (log.request.body.isNotEmpty) {
+    true => 'Request body: ```json\n${log.request.body.prettyJson}```\n',
+    false => '\r',
+  };
+
+  String get _responseBody => switch (log.response?.body) {
+    Map<String, Object?> body =>
+      'Response body: ```json\n${body.prettyJson}```\n',
+    _ when log.error != null && log.error is ApiClientException =>
+      'Error body: '
+          '```json\n${(log.error as ApiClientException).data?.prettyJson}```\n',
+    _ => '\r',
+  };
 
   /// Method that converts the [ThunderNetworkLog] to a copyable log data string
   String get toCopyableLogData {
     final statusCode =
-        log.response?.statusCode ?? log.error?.response?.statusCode;
+        log.response?.statusCode ??
+        switch (log.error) {
+          ApiClientException(:final statusCode) => statusCode,
+          _ => null,
+        };
+
     final buffer = StringBuffer()
-      ..writeln('Server: ${log.request.uri.host}')
+      ..writeln('Server: ${log.request.url.host}')
       ..writeln('Method: ${log.request.method}')
-      ..writeln('Endpoint: ${log.request.uri.path}')
-      ..writeln('Status: $statusCode');
+      ..writeln('Endpoint: ${log.request.url.path}')
+      ..writeln('Status: ${statusCode ?? '-'}');
 
     if (log.duration != null) {
       buffer.writeln('Duration: ${log.duration?.formatCompactDuration}');
@@ -133,9 +142,7 @@ class CopyLogData {
       buffer.write('\n$responseBody');
     } else {
       if (log.error != null) {
-        buffer.write(
-          '```json\n${(log.error?.response?.data as Object?).prettyJson}```',
-        );
+        buffer.write('Error: ${log.error}');
       } else {
         buffer.write('Response body is empty');
       }

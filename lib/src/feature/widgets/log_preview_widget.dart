@@ -1,20 +1,21 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/models/thunder_network_log.dart';
-import '../../common/utils/app_colors.dart';
+import '../../common/utils/colors.dart';
 import 'awaiting_response_widget.dart';
 import 'json_viewer.dart';
 import 'list_row_item.dart';
 
 /// A widget that displays a preview of a network log.
-class LogPreviewWidget extends StatefulWidget {
-  /// Constructor for the [LogPreviewWidget] class.
-  const LogPreviewWidget({required this.log, super.key});
-
+class const LogPreviewWidget({
   /// The network log to display
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [LogPreviewWidget] class.
+  this;
 
   @override
   State<LogPreviewWidget> createState() => _LogPreviewWidgetState();
@@ -35,30 +36,30 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
   @override
   // Use a switch-like expression for clarity.
   Widget build(BuildContext context) => switch (widget.log.isLoading) {
-        /// Builds a view for awaiting response.
-        true => const AwaitingResponseWidget(),
+    /// Builds a view for awaiting response.
+    true => const AwaitingResponseWidget(),
 
-        /// Builds the main response view including both
-        /// horizontal and vertical scrolling.
-        false => SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 2,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildResponsePreview(),
-                    ),
-                  ),
-                ),
+    /// Builds the main response view including
+    /// both horizontal and vertical scrolling.
+    false => SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SizedBox(
+        width: MediaQuery.sizeOf(context).width * 2,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _buildResponsePreview(),
               ),
             ),
           ),
-      };
+        ),
+      ),
+    ),
+  };
 
   /// Returns a list of widgets representing the preview content.
   List<Widget> _buildResponsePreview() {
@@ -69,11 +70,12 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
       rows.addAll(_buildBodyRows());
     } else if (widget.log.error != null) {
       rows.addAll([
-        const Row(
+        Row(
           children: [
             Text(
               'Error Details',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
         ),
@@ -106,38 +108,40 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
 
   /// Builds a view for image responses.
   List<Widget> _buildImageBodyRows() => [
-        Column(
+    Column(
+      children: [
+        Row(
           children: [
-            const Row(
-              children: [
-                Text('Body: Image',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
+            Text(
+              'Body: Image',
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
-            Image.network(
-              widget.log.request.uri.toString(),
-              fit: BoxFit.fill,
-              headers: _buildRequestHeaders(),
-              loadingBuilder: (context, child, loadingProgress) {
-                // Show a progress indicator until image is loaded.
-                if (loadingProgress == null) return child;
-                final expected = loadingProgress.expectedTotalBytes ?? 0;
-                final progress = expected > 0
-                    ? loadingProgress.cumulativeBytesLoaded / expected
-                    : null;
-                return Center(
-                    child: CircularProgressIndicator(value: progress));
-              },
-            ),
-            const SizedBox(height: 8),
           ],
         ),
-      ];
+        const SizedBox(height: 8),
+        Image.network(
+          widget.log.request.url.toString(),
+          fit: BoxFit.fill,
+          headers: _buildRequestHeaders(),
+          loadingBuilder: (context, child, loadingProgress) {
+            // Show a progress indicator until image is loaded.
+            if (loadingProgress == null) return child;
+            final expected = loadingProgress.expectedTotalBytes ?? 0;
+            final progress = expected > 0
+                ? loadingProgress.cumulativeBytesLoaded / expected
+                : null;
+            return Center(child: CircularProgressIndicator(value: progress));
+          },
+        ),
+        const SizedBox(height: 8),
+      ],
+    ),
+  ];
 
   /// Builds a view for very large text responses.
   List<Widget> _buildLargeBodyTextRows() {
-    final bodySize = widget.log.response?.data.toString().length ?? 0;
+    final bodySize = widget.log.response?.body.toString().length ?? 0;
     if (_showLargeBody) return _buildTextBodyRows();
 
     return [
@@ -145,8 +149,12 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
       const SizedBox(height: 8),
       ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll<Color>(Colors.red.shade300),
-          foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+          backgroundColor: WidgetStatePropertyAll<Color>(
+            ThunderColors.of(context).cRed,
+          ),
+          foregroundColor: WidgetStatePropertyAll<Color>(
+            ThunderColors.of(context).cWhite,
+          ),
         ),
         onPressed: () => setState(() => _showLargeBody = true),
         child: const Text('Show body'),
@@ -159,7 +167,7 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
   /// Builds a view for text responses.
   List<Widget> _buildTextBodyRows() {
     final rows = <Widget>[];
-    final bodyContent = _formatBody(widget.log.response?.data);
+    final bodyContent = _formatBody(widget.log.response?.body);
 
     // Check for JSON-like content and try to parse it.
     if (bodyContent.contains('{') && bodyContent.contains('}')) {
@@ -180,16 +188,16 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
   List<Widget> _buildUnknownBodyRows() {
     final rows = <Widget>[];
     // Retrieve headers and content type from the response.
-    final headers = widget.log.response?.headers.map;
+    final headers = widget.log.response?.headers;
     final contentType = _getContentType(headers ?? {}) ?? '<unknown>';
 
     if (_showUnsupportedBody) {
-      final bodyContent = _formatBody(widget.log.response?.data);
+      final bodyContent = _formatBody(widget.log.response?.body);
       rows.add(ListRowItem(name: 'Body', value: bodyContent));
     } else {
       rows.addAll([
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
+          width: MediaQuery.sizeOf(context).width * 0.8,
           child: Column(
             children: [
               ListRowItem(
@@ -205,10 +213,10 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll<Color>(
-                    AppColors.mainColor,
+                    ThunderColors.of(context).surface,
                   ),
-                  foregroundColor: const WidgetStatePropertyAll<Color>(
-                    AppColors.white,
+                  foregroundColor: WidgetStatePropertyAll<Color>(
+                    ThunderColors.of(context).cWhite,
                   ),
                 ),
                 onPressed: () => setState(() => _showUnsupportedBody = true),
@@ -224,8 +232,8 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
 
   /// Extracts request headers from the log as a simple Map.
   Map<String, String> _buildRequestHeaders() => widget.log.request.headers.map(
-        (key, value) => MapEntry(key, value.toString()),
-      );
+    (key, value) => MapEntry(key, value.toString()),
+  );
 
   /// Checks if the response content type is an image.
   bool _isImageResponse() {
@@ -247,7 +255,7 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
   /// Returns the content type from the response headers.
   String? _getContentTypeOfResponse() {
     if (widget.log.response == null) return null;
-    return _getContentType(widget.log.response!.headers.map);
+    return _getContentType(widget.log.response!.headers);
   }
 
   /// Retrieves the content type header from a headers map.
@@ -264,12 +272,12 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
 
   /// Checks if the response body is considered large.
   bool _isLargeResponseBody() {
-    final data = widget.log.response?.data;
+    final data = widget.log.response?.body;
     return data != null && data.toString().length > _kLargeOutputSize;
   }
 
-  /// Formats the body as a pretty
-  /// JSON string (if possible) or uses its string representation.
+  /// Formats the body as a pretty JSON string
+  /// (if possible) or uses its string representation.
   String _formatBody(Object? body) {
     if (body == null) return '';
     if (body is Map || body is List) {

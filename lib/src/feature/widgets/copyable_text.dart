@@ -1,18 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
-import '../../common/utils/app_colors.dart';
+import '../../common/utils/colors.dart';
 
 /// A custom selectable text widget that displays a string with a copy button.
-class CopyableText extends StatefulWidget {
-  /// Constructor for the [CopyableText] class.
-  const CopyableText({required this.value, this.style, super.key});
-
+class const CopyableText({
   /// The value of the text.
-  final String? value;
+  required final String? value,
 
   /// The style of the text.
-  final TextStyle? style;
+  final TextStyle? style,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [CopyableText] class.
+  this;
 
   @override
   State<CopyableText> createState() => _CopyableTextState();
@@ -21,33 +22,36 @@ class CopyableText extends StatefulWidget {
 class _CopyableTextState extends State<CopyableText> {
   @override
   Widget build(BuildContext context) => SelectableText(
-        widget.value ?? 'null',
-        style: widget.style ??
-            const TextStyle(
-              fontSize: 12.5,
-              color: AppColors.gunmetal,
-              fontWeight: FontWeight.w500,
-            ),
-        contextMenuBuilder: (
-          context,
-          editableTextState,
-        ) =>
-            AdaptiveTextSelectionToolbar.buttonItems(
+    widget.value ?? 'null',
+    style:
+        (widget.style ??
+                Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 11,
+                  color: ThunderColors.of(context).cBlack,
+                  fontWeight: FontWeight.w500,
+                ))
+            ?.copyWith(height: 1, letterSpacing: -0.05),
+    // Display-only text: leave drags, wheel and scrollbars to the parent list.
+    scrollPhysics: const NeverScrollableScrollPhysics(),
+    scrollBehavior: ScrollConfiguration.of(context)
+        .copyWith(scrollbars: false, overscroll: false),
+    contextMenuBuilder: (context, editableTextState) =>
+        AdaptiveTextSelectionToolbar.buttonItems(
           buttonItems: [
             ContextMenuButtonItem(
               onPressed: () {
-                final selectedText =
-                    editableTextState.textEditingValue.selection.textInside(
-                  editableTextState.textEditingValue.text,
-                );
+                final selectedText = editableTextState
+                    .textEditingValue
+                    .selection
+                    .textInside(editableTextState.textEditingValue.text);
 
                 Clipboard.setData(ClipboardData(text: selectedText));
                 ContextMenuController.removeAny();
               },
               type: ContextMenuButtonType.copy,
-            )
+            ),
           ],
           anchors: editableTextState.contextMenuAnchors,
         ),
-      );
+  );
 }

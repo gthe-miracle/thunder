@@ -1,33 +1,31 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
+
+import '../extension/middleware_extensions.dart';
+import '../models/thunder_network_log.dart';
+import 'colors.dart';
 
 /// Class that helps with various helper methods
-abstract class Helpers {
-  const Helpers._();
-
-  static const int _kilobyteAsByte = 1000;
-  static const int _megabyteAsByte = 1000000;
+abstract class const Helpers._() {
+  static const int _kilobyteAsByte = 1_000;
+  static const int _megabyteAsByte = 1_000_000;
 
   /// Method that formats the bytes to a human readable format
-  static String formatBytes(int? bytes) {
-    if (bytes == null || bytes < 0) return '0B';
-
-    if (bytes <= _kilobyteAsByte) return '${bytes}B';
-
-    if (bytes <= _megabyteAsByte) {
-      return '${_formatDouble(bytes / _kilobyteAsByte)}kB';
-    }
-
-    return '${_formatDouble(bytes / _megabyteAsByte)}MB';
-  }
-
-  static String _formatDouble(double value) => value.toStringAsFixed(2);
+  static String formatBytes(int? bytes) => switch (bytes) {
+    null || < 0 => '0B',
+    <= _kilobyteAsByte => '${bytes}B',
+    <= _megabyteAsByte => '${_formatDouble(bytes / _kilobyteAsByte)}kB',
+    _ => '${_formatDouble(bytes / _megabyteAsByte)}MB',
+  };
 
   /// Method that shows a snack bar in iOS style
   static void showSnackBar(
     BuildContext context, {
     String content = 'Copied to your clipboard!',
   }) {
+    final colors = ThunderColors.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
     final overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         bottom: 50,
@@ -37,12 +35,13 @@ abstract class Helpers {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             decoration: BoxDecoration(
-              color: CupertinoColors.systemGrey.withValues(alpha: 0.9),
+              color: colors.surface.withValues(alpha: 0.95),
+              border: Border.all(color: colors.gray),
               borderRadius: BorderRadius.circular(48),
             ),
             child: Text(
               content,
-              style: const TextStyle(color: CupertinoColors.white),
+              style: textTheme.bodyMedium?.copyWith(color: colors.cWhite),
             ),
           ),
         ),
@@ -50,7 +49,9 @@ abstract class Helpers {
     );
 
     Overlay.of(context).insert(overlayEntry);
-    Future<void>.delayed(const Duration(seconds: 3), overlayEntry.remove);
+    Future<void>.delayed(const Duration(seconds: 3), () {
+      if (overlayEntry.mounted) overlayEntry.remove();
+    });
   }
 
   /// Method that copies the content to the clipboard and shows a snack bar
@@ -64,4 +65,15 @@ abstract class Helpers {
       showSnackBar(context);
     }
   }
+
+  /// get StatusCode from the log
+  static String getStatusCode(ThunderNetworkLog log) =>
+      switch (log.response?.statusCode) {
+        int statusCode => statusCode.toString(),
+        _ when log.error != null && log.error is ApiClientException =>
+          (log.error as ApiClientException).statusCode.toString(),
+        _ => 'null',
+      };
 }
+
+String _formatDouble(double value) => value.toStringAsFixed(2);

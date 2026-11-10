@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../thunder.dart';
-import '../../common/utils/app_colors.dart';
 import '../../common/utils/thunder_animation_controller.dart';
 import 'thunder_logs_controller.dart';
 
@@ -18,62 +17,24 @@ abstract class ThunderOverlayController extends State<Thunder>
   /// Whether the overlay is dismissed
   bool dismissed = true;
 
-  @override
-  void initState() {
-    super.initState();
-
-    AppColors.mainColor = widget.color ?? AppColors.mainColor;
-
-    controller = ThunderToolsController(
-      value: 0,
-      duration: widget.duration,
-      vsync: this,
-    );
-    controller.addStatusListener(_onStatusChanged);
-    _onStatusChanged(controller.status);
-  }
-
-  @override
-  void didUpdateWidget(covariant Thunder oldWidget) {
-    if (widget.enabled) {
-      dismissed = controller.status == AnimationStatus.dismissed;
-    } else {
-      dismissed = true;
-    }
-    if (widget.duration != oldWidget.duration) {
-      controller.duration = widget.duration;
-    }
-
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    controller
-      ..removeStatusListener(_onStatusChanged)
-      ..dispose();
-
-    super.dispose();
-  }
-
   void _onStatusChanged(AnimationStatus status) => switch (status) {
-        _ when !mounted => null,
-        AnimationStatus.dismissed => () {
-            if (dismissed) return;
-            setState(() => dismissed = true);
+    _ when !mounted => null,
+    AnimationStatus.dismissed => () {
+      if (dismissed) return;
+      setState(() => dismissed = true);
 
-            if (ThunderLogsController.searchEnabled) {
-              ThunderLogsController.toggleSearch();
-            }
+      if (ThunderLogsController.searchEnabled) {
+        ThunderLogsController.toggleSearch();
+      }
 
-            // Unfocus keyboard when the overlay is dismissed
-            FocusManager.instance.primaryFocus?.unfocus();
-          }(),
-        _ => () {
-            if (!dismissed) return;
-            setState(() => dismissed = false);
-          }(),
-      };
+      // Unfocus keyboard when the overlay is dismissed
+      FocusManager.instance.primaryFocus?.unfocus();
+    }(),
+    _ => () {
+      if (!dismissed) return;
+      setState(() => dismissed = false);
+    }(),
+  };
 
   /// Method that handles the horizontal drag update
   void onHorizontalDragUpdate(DragUpdateDetails details, double width) {
@@ -109,4 +70,43 @@ abstract class ThunderOverlayController extends State<Thunder>
       controller.hide();
     }
   }
+
+  /* region lifecycle */
+  @override
+  void initState() {
+    super.initState();
+
+    controller = ThunderToolsController(
+      value: 0,
+      duration: widget.duration,
+      vsync: this,
+    );
+    controller.addStatusListener(_onStatusChanged);
+    _onStatusChanged(controller.status);
+  }
+
+  @override
+  void didUpdateWidget(covariant Thunder oldWidget) {
+    if (widget.enabled) {
+      dismissed = controller.status == AnimationStatus.dismissed;
+    } else {
+      dismissed = true;
+    }
+    if (widget.duration != oldWidget.duration) {
+      controller.duration = widget.duration;
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    controller
+      ..removeStatusListener(_onStatusChanged)
+      ..dispose();
+
+    super.dispose();
+  }
+
+  /* endregion lifecycle */
 }

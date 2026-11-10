@@ -1,116 +1,93 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http_package;
 
+import '../extension/middleware_extensions.dart';
 import '../models/thunder_network_log.dart';
 
-/// Custom Dio interceptor for Thunder
-final class ThunderInterceptor extends Interceptor {
-  /// Constructor for the [ThunderInterceptor] class.
-  ThunderInterceptor({required this.onNetworkActivity});
-
+/// Middleware for Thunder
+class ThunderMiddleware({
   /// The callback to call when a network activity is detected
-  final void Function(ThunderNetworkLog log) onNetworkActivity;
+  required final void Function(ThunderNetworkLog log) onNetworkActivity,
 
-  /// The map of request hash codes to their start times
-  final Map<String, DateTime> _requestStartTimes = <String, DateTime>{};
+  /// Whether the middleware records network activity.
+  ///
+  /// Checked per request: when `false` the request is passed straight
+  /// to the inner handler and no log is emitted. Can be flipped at
+  /// runtime; requests already in flight still complete their log entry.
+  var bool enabled = true,
+}) {
+  /// Constructor for the [ThunderMiddleware] class.
+  this;
 
-  /// The map of request hash codes to their log IDs
-  final Map<String, String> _requestIdMap = <String, String>{};
+  /// The handler for the middleware
+  ApiClientHandler call(ApiClientHandler innerHandler) =>
+      (request, context) async {
+        if (!enabled) return innerHandler(request, context);
 
-  /// Creates a stable key for the request based on its properties
-  String _getRequestKey(RequestOptions options) {
-    // Use or create a unique identifier for this request
-    const thunderIdKey = 'thunder_request_id';
-    if (!options.extra.containsKey(thunderIdKey)) {
-      options.extra[thunderIdKey] =
-          DateTime.now().microsecondsSinceEpoch.toString();
-    }
-    return options.extra[thunderIdKey] as String? ?? '';
-  }
+        final startTime = DateTime.now();
+        final logId = DateTime.now().microsecondsSinceEpoch.toString();
 
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final requestKey = _getRequestKey(options);
-    final logId = DateTime.now().microsecondsSinceEpoch.toString();
+        var sendBytes = 0;
+        if (request case final http_package.MultipartRequest request) {
+          sendBytes = request.contentLength;
+        } else {
+          sendBytes = request.bodyBytes.length;
+        }
 
-    // Store the start time
-    _requestStartTimes[requestKey] = DateTime.now();
+        final log = ThunderNetworkLog(
+          id: logId,
+          request: request,
+          isLoading: true,
+          receiveTime: null,
+          sendTime: startTime,
+          sendBytes: sendBytes,
+        );
 
-    // Map the request hash to the log ID
-    _requestIdMap[requestKey] = logId;
+        onNetworkActivity(log);
 
-    final log = ThunderNetworkLog(
-      id: logId,
-      sendTime: DateTime.now(),
-      request: options,
-      isLoading: true,
-      receiveTime: null,
-    );
+        try {
+          final response = await innerHandler(request, context);
 
-    onNetworkActivity(log);
-    handler.next(options);
-  }
+          final duration = DateTime.now().difference(startTime);
 
-  @override
-  void onResponse(
-    Response<Object?> response,
-    ResponseInterceptorHandler handler,
-  ) {
-    final requestKey = _getRequestKey(response.requestOptions);
-    final startTime = _requestStartTimes[requestKey];
-    final logId = _requestIdMap[requestKey];
+          onNetworkActivity(
+            log.copyWith(
+              receiveTime: DateTime.now(),
+              isLoading: false,
+              response: response,
+              duration: duration,
+              receiveBytes: response.contentLength,
+              statusCode: response.statusCode,
+            ),
+          );
 
-    Duration? duration;
-    if (startTime != null) {
-      duration = DateTime.now().difference(startTime);
-      _requestStartTimes.remove(requestKey);
-    }
+          return response;
+        } on ApiClientException catch (error) {
+          final duration = DateTime.now().difference(startTime);
+          onNetworkActivity(
+            log.copyWith(
+              receiveTime: DateTime.now(),
+              error: error,
+              statusCode: error.statusCode,
+              receiveBytes: utf8.encode(error.data?.toString() ?? '').length,
+              duration: duration,
+              isLoading: false,
+            ),
+          );
 
-    final log = ThunderNetworkLog(
-      id: logId ?? DateTime.now().microsecondsSinceEpoch.toString(),
-      sendTime: startTime,
-      receiveTime: DateTime.now(),
-      isLoading: false,
-      request: response.requestOptions,
-      response: response,
-      duration: duration,
-      receiveBytes: utf8.encode(response.data.toString()).length,
-      sendBytes: utf8.encode(response.requestOptions.data.toString()).length,
-    );
+          rethrow;
+        } on Object catch (error) {
+          onNetworkActivity(
+            log.copyWith(
+              receiveTime: DateTime.now(),
+              error: error,
+              duration: DateTime.now().difference(startTime),
+              isLoading: false,
+            ),
+          );
 
-    onNetworkActivity(log);
-    _requestIdMap.remove(requestKey);
-
-    handler.next(response);
-  }
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    final requestKey = _getRequestKey(err.requestOptions);
-    final startTime = _requestStartTimes[requestKey];
-    final logId = _requestIdMap[requestKey];
-
-    Duration? duration;
-    if (startTime != null) {
-      duration = DateTime.now().difference(startTime);
-      _requestStartTimes.remove(requestKey);
-    }
-
-    final log = ThunderNetworkLog(
-      id: logId ?? DateTime.now().microsecondsSinceEpoch.toString(),
-      sendTime: startTime,
-      request: err.requestOptions,
-      receiveTime: DateTime.now(),
-      error: err,
-      duration: duration,
-      isLoading: false,
-      receiveBytes: utf8.encode(err.response?.data.toString() ?? '').length,
-      sendBytes: utf8.encode(err.requestOptions.data.toString()).length,
-    );
-
-    onNetworkActivity(log);
-    _requestIdMap.remove(requestKey);
-    handler.next(err);
-  }
+          rethrow;
+        }
+      };
 }
