@@ -3,14 +3,14 @@
 A powerful Flutter debug overlay for monitoring network requests in real-time. Thunder provides a convenient slide-out panel that shows all network interactions from your `package:http`-based clients and WebSockets.
 
 <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px;">
-  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_1.png" width="200" alt="Thunder Overview">
-  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_2.png" width="200" alt="Thunder Request Details">
-  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_3.png" width="200" alt="Thunder Response View">
-  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_4.png" width="200" alt="Thunder Search Feature">
-  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_5.png" width="200" alt="Thunder Search Feature">
-  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_6.png" width="200" alt="Thunder Search Feature">
-  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_7.png" width="200" alt="Thunder Socket Sessions">
-  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_8.png" width="200" alt="Thunder Socket Session Timeline">
+  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_1.png" width="180" alt="Thunder Overview">
+  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_2.png" width="180" alt="Thunder Request Details">
+  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_3.png" width="180" alt="Thunder Response View">
+  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_4.png" width="180" alt="Thunder Search Feature">
+  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_5.png" width="180" alt="Thunder Search Feature">
+  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_6.png" width="180" alt="Thunder Search Feature">
+  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_7.png" width="180" alt="Thunder Socket Sessions">
+  <img src="https://github.com/gthe-miracle/thunder/raw/main/screenshots/screenshot_8.png" width="180" alt="Thunder Socket Session Timeline">
 </div>
 
 ## Features
