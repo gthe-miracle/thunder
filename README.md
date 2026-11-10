@@ -60,9 +60,7 @@ flutter pub get
 Wrap your app with the `Thunder` widget and plug `Thunder.middleware` into
 your `package:http`-based client's middleware chain. Thunder exports the
 middleware types (`ApiClientMiddleware`, `ApiClientHandler`,
-`ApiClientRequest`, `ApiClientResponse`); the client itself is yours — see
-this [reference `ApiClient`](https://github.com/Miracle-Blue/thunder/blob/b0b8f1a77ad41b9fb2ab21cb600bcf09d6189af0/example/lib/api_client.dart)
-for a complete implementation:
+`ApiClientRequest`, `ApiClientResponse`);
 
 ```dart
 import 'package:material_ui/material_ui.dart';
@@ -221,7 +219,7 @@ The overlay shows:
 
 ## Example Project
 
-For a complete working example, check the [example](https://github.com/Miracle-Blue/thunder/blob/dev/example/lib/main.dart) directory.
+For a complete working example, check the [example](https://github.com/gthe-miracle/thunder/blob/dev/example/lib/main.dart) directory.
 
 ## Contributing
 
@@ -237,4 +235,4 @@ Contributions are welcome! If you find a bug or want a feature, please:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/Miracle-Blue/thunder/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/gthe-miracle/thunder/blob/main/LICENSE) file for details.
