@@ -1,6 +1,6 @@
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/utils/colors.dart';
 import '../../common/utils/helpers.dart';
@@ -131,9 +131,8 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
                 ),
                 Text(
                   ':',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: Colors.grey),
                 ),
 
                 // Value preview.
@@ -157,33 +156,26 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
     if (value == null) {
       return CopyableText(
         value: 'undefined',
-        style: Theme.of(
-          context,
-        ).textTheme.bodySmall?.copyWith(color: Colors.grey, fontSize: 12),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: Colors.grey, fontSize: 12),
       );
     } else if (value is int || value is double) {
       return CopyableText(
         value: value.toString(),
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: const Color(0xff6491b3),
-          fontSize: 12,
-        ),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: const Color(0xff6491b3), fontSize: 12),
       );
     } else if (value is String) {
       return CopyableText(
         value: '"$value"',
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: const Color(0xff6a8759),
-          fontSize: 12,
-        ),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: const Color(0xff6a8759), fontSize: 12),
       );
     } else if (value is bool) {
       return CopyableText(
         value: value.toString(),
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: const Color(0xffca7832),
-          fontSize: 12,
-        ),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: const Color(0xffca7832), fontSize: 12),
       );
     } else if (value is List) {
       if (value.isEmpty) {
@@ -227,9 +219,8 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
         Helpers.copyAndShowSnackBar(context, contentToCopy: text),
     child: Text(
       text,
-      style: Theme.of(
-        context,
-      ).textTheme.bodySmall?.copyWith(color: Colors.grey, fontSize: 12),
+      style: Theme.of(context).textTheme.bodySmall
+          ?.copyWith(color: Colors.grey, fontSize: 12),
     ),
   );
 
@@ -321,9 +312,8 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
                 ),
                 Text(
                   ': ',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: Colors.grey),
                 ),
                 Expanded(child: _buildValuePreview(i, value)),
               ],
@@ -343,30 +333,26 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
     if (value == null) {
       return CopyableText(
         value: 'undefined',
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: Colors.grey),
       );
     } else if (value is int || value is double) {
       return CopyableText(
         value: value.toString(),
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(color: const Color(0xff6491b3)),
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: const Color(0xff6491b3)),
       );
     } else if (value is String) {
       return CopyableText(
         value: '"$value"',
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(color: const Color(0xff6a8759)),
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: const Color(0xff6a8759)),
       );
     } else if (value is bool) {
       return CopyableText(
         value: value.toString(),
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(color: const Color(0xffca7832)),
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: const Color(0xffca7832)),
       );
     } else if (value is List) {
       if (value.isEmpty) {
@@ -406,9 +392,8 @@ class _JsonArrayViewerState extends State<JsonArrayViewer> {
         Helpers.copyAndShowSnackBar(context, contentToCopy: text),
     child: Text(
       text,
-      style: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+      style: Theme.of(context).textTheme.bodyMedium
+          ?.copyWith(color: Colors.grey),
     ),
   );
 

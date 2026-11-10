@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/models/thunder_network_log.dart';
 import '../../common/utils/colors.dart';
@@ -73,10 +73,8 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
           children: [
             Text(
               'Error Details',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
         ),
@@ -115,9 +113,8 @@ class _LogPreviewWidgetState extends State<LogPreviewWidget> {
           children: [
             Text(
               'Body: Image',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),

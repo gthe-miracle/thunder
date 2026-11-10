@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:thunder/src/feature/screens/thunder_logs_screen.dart';
 import 'package:thunder/src/feature/screens/thunder_ws_log_detail_screen.dart';
 import 'package:thunder/src/feature/widgets/socket_session_button.dart';

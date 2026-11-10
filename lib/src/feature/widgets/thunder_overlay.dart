@@ -1,7 +1,8 @@
 import 'dart:math' as math;
 
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/extension/middleware_extensions.dart';
 import '../../common/utils/colors.dart';
@@ -386,11 +387,21 @@ class _ThunderState extends ThunderOverlayController {
                       ),
                     ),
                     child: RepaintBoundary(
-                      child: Theme(
-                        data: _panelTheme(widget.fontFamily),
-                        child: SizedBox(
-                          width: width,
-                          child: _materialContext(),
+                      // material_ui / cupertino_ui look up their own
+                      // localization types, which a host still on the SDK's
+                      // flutter/material.dart MaterialApp does not provide.
+                      child: Localizations.override(
+                        context: context,
+                        delegates: const <LocalizationsDelegate<Object?>>[
+                          DefaultMaterialLocalizations.delegate,
+                          DefaultCupertinoLocalizations.delegate,
+                        ],
+                        child: Theme(
+                          data: _panelTheme(widget.fontFamily),
+                          child: SizedBox(
+                            width: width,
+                            child: _materialContext(),
+                          ),
                         ),
                       ),
                     ),

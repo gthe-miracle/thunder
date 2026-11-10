@@ -5,15 +5,15 @@ import 'package:http/http.dart' as http_package;
 /// returns a [http_package.StreamedResponse].
 /// The [context] parameter is a map that can be used to store data
 /// that should be available to all middleware.
-typedef ApiClientHandler =
-    Future<ApiClientResponse> Function(
-      ApiClientRequest request,
-      Map<String, Object?> context,
-    );
+typedef ApiClientHandler = Future<ApiClientResponse> Function(
+  ApiClientRequest request,
+  Map<String, Object?> context,
+);
 
 /// A function that takes a [ApiClientHandler] and returns a [ApiClientHandler].
-typedef ApiClientMiddleware =
-    ApiClientHandler Function(ApiClientHandler innerHandler);
+typedef ApiClientMiddleware = ApiClientHandler Function(
+  ApiClientHandler innerHandler,
+);
 
 /// A wrapper for [ApiClientMiddleware] that allows for optional handlers.
 extension type ApiClientMiddlewareWrapper._(ApiClientMiddleware _fn) {

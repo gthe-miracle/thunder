@@ -1,6 +1,6 @@
 name: thunder
 description: "Flutter debug-overlay network inspector for package:http-based clients and WebSockets, with real-time monitoring, detailed logs, and curl command generation."
-version: 1.1.0-dev.9
+version: 2.0.0
 
 homepage: https://github.com/Miracle-Blue/thunder
 repository: https://github.com/Miracle-Blue/thunder
@@ -22,13 +22,16 @@ platforms:
   windows:
 
 environment:
-  sdk: ^3.8.0
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
     sdk: flutter
   http: ^1.6.0
   web_socket_channel: ^3.0.3
+  material_ui: ^1.11.0
+  cupertino_ui: ^1.1.6
 
 dev_dependencies:
   flutter_test:

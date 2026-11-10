@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/extension/middleware_extensions.dart';
 import '../../common/extension/object_extension.dart';
@@ -140,10 +140,8 @@ class _LogResponseWidgetState extends State<LogResponseWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   'HTML Response',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium
+                      ?.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -172,10 +170,8 @@ class _LogResponseWidgetState extends State<LogResponseWidget> {
                   padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                   child: Text(
                     'Error (HTML body)',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 )
               else
@@ -217,9 +213,8 @@ class _LogResponseWidgetState extends State<LogResponseWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 6),
           child: CopyableText(
             value: 'Body:',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.bodyMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         const Spacer(),

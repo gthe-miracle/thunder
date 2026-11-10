@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Enum representing different sorting options for network logs.
 enum SortType {
@@ -69,10 +69,8 @@ class _SortByAlertDialogState extends State<_SortByAlertDialog> {
   Widget build(BuildContext context) => AlertDialog(
     title: Text(
       'Sort by',
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-      ),
+      style: Theme.of(context).textTheme.titleMedium
+          ?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
     ),
     content: Column(
       mainAxisSize: MainAxisSize.min,

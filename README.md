@@ -9,6 +9,8 @@ A powerful Flutter debug overlay for monitoring network requests in real-time. T
   <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_4.png" width="200" alt="Thunder Search Feature">
   <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_5.png" width="200" alt="Thunder Search Feature">
   <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_6.png" width="200" alt="Thunder Search Feature">
+  <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_7.png" width="200" alt="Thunder Socket Sessions">
+  <img src="https://github.com/Miracle-Blue/thunder/raw/main/screenshots/screenshot_8.png" width="200" alt="Thunder Socket Session Timeline">
 </div>
 
 ## Features
@@ -28,13 +30,21 @@ A powerful Flutter debug overlay for monitoring network requests in real-time. T
 | :-----: | :---: | :---: | :---: | :---: | :-----: |
 |✅|✅|✅|✅|✅|✅|
 
+## Requirements
+
+- Flutter `>=3.47.0`, Dart `^3.13.0`
+- Thunder's panel is built with
+  [`material_ui`](https://pub.dev/packages/material_ui), the Material library
+  that was decoupled from the Flutter SDK. Use Thunder 1.x if your app is
+  still on an older Flutter release.
+
 ## Installation
 
 Add Thunder to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  thunder: ^1.1.0-dev.4
+  thunder: ^2.0.0
 ```
 
 Then run:
@@ -51,15 +61,16 @@ Wrap your app with the `Thunder` widget and plug `Thunder.middleware` into
 your `package:http`-based client's middleware chain. Thunder exports the
 middleware types (`ApiClientMiddleware`, `ApiClientHandler`,
 `ApiClientRequest`, `ApiClientResponse`); the client itself is yours — see
-the [example app's `ApiClient`](https://github.com/Miracle-Blue/thunder/blob/dev/example/lib/api_client.dart)
+this [reference `ApiClient`](https://github.com/Miracle-Blue/thunder/blob/b0b8f1a77ad41b9fb2ab21cb600bcf09d6189af0/example/lib/api_client.dart)
 for a complete implementation:
 
 ```dart
+import 'package:material_ui/material_ui.dart';
 import 'package:thunder/thunder.dart';
 
 void main() {
   final client = ApiClient(
-    baseUrl: 'https://jsonplaceholder.typicode.com',
+    uri: Uri.parse('https://jsonplaceholder.typicode.com'),
     middlewares: <ApiClientMiddleware>[Thunder.middleware],
   );
 
@@ -183,6 +194,10 @@ Thunder(
 
   // Optional: Color of the handle
   color: Colors.green,
+
+  // Optional: Panel font family (defaults to 'FreeMono'); it must be
+  // declared in your app's pubspec.yaml, otherwise the platform font is used
+  fontFamily: 'FreeMono',
 
   // Required: Your app's main widget
   child: yourAppWidget,

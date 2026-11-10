@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/models/thunder_network_log.dart';
 import '../../common/models/thunder_web_socket_log.dart';
@@ -205,18 +205,22 @@ abstract class ThunderLogsController extends State<ThunderLogsScreen>
   @visibleForTesting
   static Comparator<ThunderNetworkLog>? comparatorFor(SortType? sortType) =>
       switch (sortType) {
-        SortType.createTime =>
-          (ThunderNetworkLog a, ThunderNetworkLog b) =>
-              _compareNullable(a.sendTime, b.sendTime),
-        SortType.responseTime =>
-          (ThunderNetworkLog a, ThunderNetworkLog b) =>
-              _compareNullable(a.duration, b.duration),
-        SortType.endpoint =>
-          (ThunderNetworkLog a, ThunderNetworkLog b) =>
-              a.request.url.path.compareTo(b.request.url.path),
-        SortType.responseSize =>
-          (ThunderNetworkLog a, ThunderNetworkLog b) =>
-              _compareNullable(a.receiveBytes, b.receiveBytes),
+        SortType.createTime => (
+          ThunderNetworkLog a,
+          ThunderNetworkLog b,
+        ) => _compareNullable(a.sendTime, b.sendTime),
+        SortType.responseTime => (
+          ThunderNetworkLog a,
+          ThunderNetworkLog b,
+        ) => _compareNullable(a.duration, b.duration),
+        SortType.endpoint => (
+          ThunderNetworkLog a,
+          ThunderNetworkLog b,
+        ) => a.request.url.path.compareTo(b.request.url.path),
+        SortType.responseSize => (
+          ThunderNetworkLog a,
+          ThunderNetworkLog b,
+        ) => _compareNullable(a.receiveBytes, b.receiveBytes),
         null => null,
       };
 

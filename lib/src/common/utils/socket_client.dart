@@ -45,7 +45,7 @@ class SocketClient {
   /// Creates a client for [uri].
   ///
   /// No network activity happens until [connect] is called. Pass an
-  /// [interceptor] to record the connection in Thunder's Socket tab —
+  /// `interceptor` to record the connection in Thunder's Socket tab —
   /// `Thunder.socketClient` does that for you.
   SocketClient({
     required this.uri,
@@ -54,8 +54,8 @@ class SocketClient {
     this.reconnectInterval = const Duration(seconds: 5),
     this.connectTimeout,
     this.pingInterval,
-    ThunderWebSocketInterceptor? interceptor,
-  }) : _interceptor = interceptor;
+    this._interceptor,
+  });
 
   /// The WebSocket endpoint to connect to.
   final Uri uri;

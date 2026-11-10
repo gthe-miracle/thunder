@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../thunder.dart';
 import '../../common/utils/thunder_animation_controller.dart';

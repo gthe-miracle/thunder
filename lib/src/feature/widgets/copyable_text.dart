@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/utils/colors.dart';
 
@@ -32,9 +32,8 @@ class _CopyableTextState extends State<CopyableText> {
             ?.copyWith(height: 1, letterSpacing: -0.05),
     // Display-only text: leave drags, wheel and scrollbars to the parent list.
     scrollPhysics: const NeverScrollableScrollPhysics(),
-    scrollBehavior: ScrollConfiguration.of(
-      context,
-    ).copyWith(scrollbars: false, overscroll: false),
+    scrollBehavior: ScrollConfiguration.of(context)
+        .copyWith(scrollbars: false, overscroll: false),
     contextMenuBuilder: (context, editableTextState) =>
         AdaptiveTextSelectionToolbar.buttonItems(
           buttonItems: [

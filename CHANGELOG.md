@@ -1,3 +1,10 @@
+## 2.0.0
+
+- **Breaking:** migrated from `package:flutter/material.dart` and `package:flutter/cupertino.dart` to [`material_ui`](https://pub.dev/packages/material_ui) and [`cupertino_ui`](https://pub.dev/packages/cupertino_ui). Material and Cupertino were decoupled from the Flutter SDK; the in-SDK copy is frozen and scheduled for removal ([flutter/flutter#184093](https://github.com/flutter/flutter/issues/184093), [flutter/flutter#172942](https://github.com/flutter/flutter/issues/172942))
+- **Breaking:** requires Flutter >= 3.47.0 and Dart >= 3.13.0. Apps on older Flutter releases should stay on 1.1.0-dev.9
+- The panel provides its own Material and Cupertino localizations, so it also works inside apps that still use `package:flutter/material.dart`
+- Screenshots updated; README gains a requirements section and `fontFamily` in the configuration example
+
 ## 1.1.0-dev.9
 
 - Response tab: large JSON bodies scroll smoothly on iOS — the body is rendered line by line, so only visible lines are laid out and painted (previously one giant `SelectableText` redrew the whole body every frame and scrolling froze); selection is now per line, the copy button still copies the full body

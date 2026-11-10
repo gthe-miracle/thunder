@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/utils/colors.dart';
 import '../../common/utils/helpers.dart';
@@ -60,9 +60,8 @@ class _ListRowItemState extends State<ListRowItem> {
                         (widget.name?.isNotEmpty ?? false)) ...[
                       CopyableText(
                         value: '${widget.name}:',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 4),
                     ],
@@ -85,9 +84,8 @@ class _ListRowItemState extends State<ListRowItem> {
                         (widget.name?.isNotEmpty ?? false)) ...[
                       CopyableText(
                         value: '${widget.name}:',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 4),
                     ],

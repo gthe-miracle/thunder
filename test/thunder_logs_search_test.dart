@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:material_ui/material_ui.dart';
 import 'package:thunder/src/feature/controllers/thunder_logs_controller.dart';
 import 'package:thunder/src/feature/screens/thunder_logs_screen.dart';
 import 'package:thunder/src/feature/widgets/log_button.dart';

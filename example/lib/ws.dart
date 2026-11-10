@@ -9,7 +9,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:thunder/thunder.dart';
 
 class WebSocketExamplePage extends StatefulWidget {
@@ -120,10 +120,10 @@ class _WebSocketExamplePageState extends State<WebSocketExamplePage> {
       case SocketReconnecting(:final attempt):
         _addSystemMessage('Reconnecting (attempt $attempt)…');
       case SocketDisconnected(
-          :final closeCode,
-          :final closeReason,
-          :final error,
-        ):
+        :final closeCode,
+        :final closeReason,
+        :final error,
+      ):
         final details = <String>[
           if (closeCode != null) 'code: $closeCode',
           if (closeReason != null && closeReason.isNotEmpty)
@@ -213,18 +213,17 @@ class _WebSocketExamplePageState extends State<WebSocketExamplePage> {
   bool get _isConnected => _state is SocketConnected;
 
   String get _connectionLabel => switch (_state) {
-        SocketConnecting() => 'Connecting…',
-        SocketConnected() => 'Connected',
-        SocketReconnecting(:final attempt) =>
-          'Reconnecting (attempt $attempt)…',
-        SocketDisconnected() => 'Disconnected',
-      };
+    SocketConnecting() => 'Connecting…',
+    SocketConnected() => 'Connected',
+    SocketReconnecting(:final attempt) => 'Reconnecting (attempt $attempt)…',
+    SocketDisconnected() => 'Disconnected',
+  };
 
   Color get _connectionColor => switch (_state) {
-        SocketConnected() => Colors.green,
-        SocketConnecting() || SocketReconnecting() => Colors.orange,
-        SocketDisconnected() => Colors.red,
-      };
+    SocketConnected() => Colors.green,
+    SocketConnecting() || SocketReconnecting() => Colors.orange,
+    SocketDisconnected() => Colors.red,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -311,13 +310,13 @@ class _WebSocketExamplePageState extends State<WebSocketExamplePage> {
             // ---- input bar ----
             SafeArea(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: colorScheme.surface,
-                  border: Border(
-                    top: BorderSide(color: Colors.grey.shade300),
-                  ),
+                  border: Border(top: BorderSide(color: Colors.grey.shade300)),
                 ),
                 child: Row(
                   children: [
@@ -410,7 +409,8 @@ class _MessageBubble extends StatelessWidget {
     }
 
     final isSent = message.type == _WsMessageType.sent;
-    final time = '${message.timestamp.hour.toString().padLeft(2, '0')}:'
+    final time =
+        '${message.timestamp.hour.toString().padLeft(2, '0')}:'
         '${message.timestamp.minute.toString().padLeft(2, '0')}:'
         '${message.timestamp.second.toString().padLeft(2, '0')}';
 
@@ -432,8 +432,9 @@ class _MessageBubble extends StatelessWidget {
           ),
         ),
         child: Column(
-          crossAxisAlignment:
-              isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: isSent
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
             Text(
               message.text,

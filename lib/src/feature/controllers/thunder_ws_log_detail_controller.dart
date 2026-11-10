@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../common/models/thunder_web_socket_log.dart';
 import '../../common/utils/date_time_extension.dart';
