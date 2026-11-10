@@ -1,7 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 
 /// Enum representing different sorting options for network logs.
-enum SortType {
+enum SortType(
+  /// The name of the sort type
+  final String name,
+) {
   /// Sort by creating time
   createTime('Create time'),
 
@@ -13,11 +16,6 @@ enum SortType {
 
   /// Sort by endpoint
   endpoint('Endpoint');
-
-  const SortType(this.name);
-
-  /// The name of the sort type
-  final String name;
 
   /// Getter to check current [SortType] is createTime
   bool get isCreateTime => this == createTime;
@@ -47,11 +45,8 @@ Future<SortType?> showSortByAlertDialog(
   builder: (context) => _SortByAlertDialog(sortType: sortType),
 );
 
-class _SortByAlertDialog extends StatefulWidget {
-  const _SortByAlertDialog({required this.sortType});
-
-  final SortType? sortType;
-
+class const _SortByAlertDialog({required final SortType? sortType})
+    extends StatefulWidget {
   @override
   State<_SortByAlertDialog> createState() => _SortByAlertDialogState();
 }

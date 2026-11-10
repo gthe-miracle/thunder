@@ -10,12 +10,13 @@ import '../widgets/log_request_widget.dart';
 import '../widgets/log_response_widget.dart';
 
 /// Screen that shows the details of a network request
-class ThunderLogDetailScreen extends StatefulWidget {
-  /// Constructor for the [ThunderLogDetailScreen] class.
-  const ThunderLogDetailScreen({required this.log, super.key});
-
+class const ThunderLogDetailScreen({
   /// The network log to display
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [ThunderLogDetailScreen] class.
+  this;
 
   @override
   State<ThunderLogDetailScreen> createState() => _ThunderLogDetailScreenState();

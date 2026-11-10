@@ -62,12 +62,13 @@ import '../models/thunder_network_log.dart';
 ///   "name": "John Doe",
 ///   "isJson": true
 /// }
-class CopyLogData {
-  /// Constructor for the [CopyLogData] class.
-  const CopyLogData({required this.log});
-
+class const CopyLogData({
   /// The log to convert to a copyable log data string
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
+}) {
+  /// Constructor for the [CopyLogData] class.
+  this;
+
   static final _lines = '─' * 15;
 
   String get _requestHeaders => switch (log.request.headers.isNotEmpty) {

@@ -9,15 +9,16 @@ import '../../common/utils/date_time_extension.dart';
 import '../../common/utils/helpers.dart';
 
 /// A widget that displays a button for a network log.
-class LogButton extends StatelessWidget {
-  /// Constructor for the [LogButton] class.
-  const LogButton({required this.log, required this.onLogTap, super.key});
-
+class const LogButton({
   /// The network log to display
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
 
   /// The function to call when the log button is pressed.
-  final void Function(ThunderNetworkLog log) onLogTap;
+  required final void Function(ThunderNetworkLog log) onLogTap,
+  super.key,
+}) extends StatelessWidget {
+  /// Constructor for the [LogButton] class.
+  this;
 
   String get _requestTimeDuration {
     final requestTime = (log.sendTime ?? DateTime.now()).formatHHmmssSSS;

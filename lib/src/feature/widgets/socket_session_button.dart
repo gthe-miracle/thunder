@@ -8,19 +8,16 @@ import '../../common/utils/date_time_extension.dart';
 import '../../common/utils/helpers.dart';
 
 /// A widget that displays one WebSocket session row in the Socket tab.
-class SocketSessionButton extends StatelessWidget {
-  /// Constructor for the [SocketSessionButton] class.
-  const SocketSessionButton({
-    required this.session,
-    required this.onSessionTap,
-    super.key,
-  });
-
+class const SocketSessionButton({
   /// The WebSocket session to display.
-  final ThunderWebSocketSession session;
+  required final ThunderWebSocketSession session,
 
   /// The function to call when the session row is pressed.
-  final void Function(ThunderWebSocketSession session) onSessionTap;
+  required final void Function(ThunderWebSocketSession session) onSessionTap,
+  super.key,
+}) extends StatelessWidget {
+  /// Constructor for the [SocketSessionButton] class.
+  this;
 
   String get _stateChipText => switch (session.state) {
     SocketConnected() => 'LIVE',

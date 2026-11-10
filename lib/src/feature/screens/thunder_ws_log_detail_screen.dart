@@ -9,12 +9,13 @@ import '../../common/utils/helpers.dart';
 import '../controllers/thunder_ws_log_detail_controller.dart';
 
 /// Screen that shows the live timeline of a WebSocket session.
-class ThunderWsLogDetailScreen extends StatefulWidget {
-  /// Constructor for the [ThunderWsLogDetailScreen] class.
-  const ThunderWsLogDetailScreen({required this.session, super.key});
-
+class const ThunderWsLogDetailScreen({
   /// The WebSocket session to display.
-  final ThunderWebSocketSession session;
+  required final ThunderWebSocketSession session,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [ThunderWsLogDetailScreen] class.
+  this;
 
   @override
   State<ThunderWsLogDetailScreen> createState() =>
@@ -115,11 +116,8 @@ class _ThunderWsLogDetailScreenState extends ThunderWsLogDetailController {
 }
 
 /// Compact header with the session's endpoint, state and counters.
-class _SessionSummary extends StatelessWidget {
-  const _SessionSummary({required this.session});
-
-  final ThunderWebSocketSession session;
-
+class const _SessionSummary({required final ThunderWebSocketSession session})
+    extends StatelessWidget {
   String get _stateText => switch (session.state) {
     SocketConnecting() => 'Connecting…',
     SocketConnected() => 'Connected',
@@ -189,12 +187,10 @@ class _SessionSummary extends StatelessWidget {
 ///
 /// Sent/received frames render as side-aligned cards; state, error and
 /// system events render as centered pills so they stand out from traffic.
-class _SocketEventTile extends StatelessWidget {
-  const _SocketEventTile({required this.log, required this.onCopy});
-
-  final ThunderWebSocketLog log;
-  final void Function(ThunderWebSocketLog log) onCopy;
-
+class const _SocketEventTile({
+  required final ThunderWebSocketLog log,
+  required final void Function(ThunderWebSocketLog log) onCopy,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = ThunderColors.of(context);
@@ -237,21 +233,13 @@ class _SocketEventTile extends StatelessWidget {
 }
 
 /// A side-aligned card for a sent or received frame.
-class _FrameCard extends StatelessWidget {
-  const _FrameCard({
-    required this.log,
-    required this.alignment,
-    required this.accent,
-    required this.icon,
-    required this.title,
-  });
-
-  final ThunderWebSocketLog log;
-  final Alignment alignment;
-  final Color accent;
-  final IconData icon;
-  final String title;
-
+class const _FrameCard({
+  required final ThunderWebSocketLog log,
+  required final Alignment alignment,
+  required final Color accent,
+  required final IconData icon,
+  required final String title,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Align(
     alignment: alignment,
@@ -311,17 +299,11 @@ class _FrameCard extends StatelessWidget {
 }
 
 /// A centered pill for state transitions, errors and annotations.
-class _EventPill extends StatelessWidget {
-  const _EventPill({
-    required this.log,
-    required this.color,
-    required this.icon,
-  });
-
-  final ThunderWebSocketLog log;
-  final Color color;
-  final IconData icon;
-
+class const _EventPill({
+  required final ThunderWebSocketLog log,
+  required final Color color,
+  required final IconData icon,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
     child: Container(

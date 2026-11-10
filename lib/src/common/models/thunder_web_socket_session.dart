@@ -16,23 +16,21 @@ import 'thunder_web_socket_log.dart';
 /// them for garbage collection.
 ///
 /// Deliberately has no `==`/`hashCode`: the aggregate is mutable.
-final class ThunderWebSocketSession extends ChangeNotifier
-    with SafeChangeNotifier {
-  /// Constructor for the [ThunderWebSocketSession] class.
-  ThunderWebSocketSession({required this.id, required this.uri, this.label})
-    : createdAt = DateTime.now();
-
+final class ThunderWebSocketSession({
   /// Identifier of the connection this session aggregates.
-  final String id;
+  required final String id,
 
   /// The remote endpoint of the connection.
-  final Uri uri;
+  required final Uri uri,
 
   /// Optional human-readable name shown instead of the host.
-  final String? label;
+  final String? label,
+}) extends ChangeNotifier with SafeChangeNotifier {
+  /// Constructor for the [ThunderWebSocketSession] class.
+  this;
 
   /// When the session was first seen.
-  final DateTime createdAt;
+  final DateTime createdAt = DateTime.now();
 
   /// Maximum retained timeline events; oldest are dropped. Counters keep
   /// accumulating across the whole connection lifetime.

@@ -18,7 +18,7 @@ typedef ApiClientMiddleware = ApiClientHandler Function(
 /// A wrapper for [ApiClientMiddleware] that allows for optional handlers.
 extension type ApiClientMiddlewareWrapper._(ApiClientMiddleware _fn) {
   /// Creates a new [ApiClientMiddleware] from the given callbacks.
-  factory ApiClientMiddlewareWrapper({
+  factory({
     Future<void> Function(
       ApiClientRequest request,
       Map<String, Object?> context,
@@ -50,16 +50,15 @@ extension type ApiClientMiddlewareWrapper._(ApiClientMiddleware _fn) {
   );
 
   /// Merges the given [middlewares] into a single [ApiClientMiddleware].
-  factory ApiClientMiddlewareWrapper.merge(
-    List<ApiClientMiddleware> middlewares,
-  ) => ApiClientMiddlewareWrapper._(
-    middlewares.length == 1
-        ? middlewares.single
-        : (handler) => middlewares.reversed.fold(
-            handler,
-            (handler, middleware) => middleware(handler),
-          ),
-  );
+  factory merge(List<ApiClientMiddleware> middlewares) =>
+      ApiClientMiddlewareWrapper._(
+        middlewares.length == 1
+            ? middlewares.single
+            : (handler) => middlewares.reversed.fold(
+                handler,
+                (handler, middleware) => middleware(handler),
+              ),
+      );
 
   /// Call the wrapped [ApiClientMiddleware] with the given [innerHandler].
   ApiClientHandler call(ApiClientHandler innerHandler) => _fn(innerHandler);
@@ -90,43 +89,36 @@ extension type ApiClientRequest(http_package.BaseRequest _request)
 
 /// An HTTP response with a JSON-encoded body.
 @immutable
-final class ApiClientResponse {
-  /// Create a new HTTP response with a JSON-encoded body.
-  const ApiClientResponse.json(
-    this.body, {
-    required this.statusCode,
-    required this.headers,
-    required this.contentLength,
-    required this.persistentConnection,
-    required this.request,
-  });
+final class const ApiClientResponse.json(
+  /// The parsed JSON body of the HTTP response.
+  final Object? body, {
 
   /// A status code of HTTP Response
-  final int statusCode;
+  required final int statusCode,
 
   /// HTTP Response headers
-  final Map<String, String> headers;
+  required final Map<String, String> headers,
 
   /// The length of the response body in bytes.
-  final int contentLength;
-
-  /// The parsed JSON body of the HTTP response.
-  final Object? body;
+  required final int contentLength,
 
   /// Whether the connection should be kept alive for future requests.
-  final bool persistentConnection;
+  required final bool persistentConnection,
 
   /// The original request that generated this response.
-  final ApiClientRequest request;
+  required final ApiClientRequest request,
+}) {
+  /// Create a new HTTP response with a JSON-encoded body.
+  this;
 }
 
 // --- Errors --- //
 
 /// A base class for all API client exceptions.
 @immutable
-abstract base class ApiClientException implements Exception {
+abstract base class const ApiClientException() implements Exception {
   /// base API client exception constructor
-  const ApiClientException();
+  this;
 
   /// HTTP status code.
   /// If the request was not sent, this will be 0.

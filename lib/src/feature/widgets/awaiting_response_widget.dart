@@ -3,15 +3,14 @@ import 'package:material_ui/material_ui.dart';
 import '../../common/utils/colors.dart';
 
 /// A widget that displays a circular progress indicator and a message.
-class AwaitingResponseWidget extends StatelessWidget {
-  /// Constructor for the [AwaitingResponseWidget] class.
-  const AwaitingResponseWidget({
-    super.key,
-    this.message = 'Awaiting response...',
-  });
+class const AwaitingResponseWidget({
+  super.key,
 
   /// The message to display
-  final String message;
+  final String message = 'Awaiting response...',
+}) extends StatelessWidget {
+  /// Constructor for the [AwaitingResponseWidget] class.
+  this;
 
   @override
   Widget build(BuildContext context) => RepaintBoundary(

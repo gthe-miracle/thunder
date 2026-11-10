@@ -38,61 +38,48 @@ enum ThunderWebSocketDirection {
 /// A single immutable event on a WebSocket connection's timeline:
 /// a sent/received frame, a state transition, an error or an annotation.
 @immutable
-final class ThunderWebSocketLog {
-  /// Constructor for the [ThunderWebSocketLog] class.
-  const ThunderWebSocketLog({
-    required this.id,
-    required this.connectionId,
-    required this.uri,
-    required this.direction,
-    required this.timestamp,
-    required this.byteSize,
-    this.message,
-    this.state,
-    this.closeCode,
-    this.closeReason,
-    this.error,
-    this.stackTrace,
-  });
-
+final class const ThunderWebSocketLog({
   /// Unique identifier of this event.
-  final String id;
+  required final String id,
 
   /// Identifier of the connection (session) this event belongs to.
-  final String connectionId;
+  required final String connectionId,
 
   /// The remote endpoint of the connection.
-  final Uri uri;
+  required final Uri uri,
 
   /// The kind of event.
-  final ThunderWebSocketDirection direction;
+  required final ThunderWebSocketDirection direction,
 
   /// When the event happened.
-  final DateTime timestamp;
+  required final DateTime timestamp,
 
   /// Payload size in bytes; `0` for non-frame events.
-  final int byteSize;
+  required final int byteSize,
 
   /// The frame payload (usually a [String] or a `List<int>`), when the
   /// event is a sent/received frame or an annotation.
-  final Object? message;
+  final Object? message,
 
   /// The new connection state, when [direction] is
   /// [ThunderWebSocketDirection.state].
-  final SocketState? state;
+  final SocketState? state,
 
   /// The WebSocket close code, when the event describes a disconnect.
-  final int? closeCode;
+  final int? closeCode,
 
   /// The WebSocket close reason, when the event describes a disconnect.
-  final String? closeReason;
+  final String? closeReason,
 
   /// The error, when [direction] is [ThunderWebSocketDirection.error] or
   /// the disconnect was caused by a failure.
-  final Object? error;
+  final Object? error,
 
   /// The stack trace accompanying [error], if any.
-  final StackTrace? stackTrace;
+  final StackTrace? stackTrace,
+}) {
+  /// Constructor for the [ThunderWebSocketLog] class.
+  this;
 
   /// Human-readable text of this event, used for display and copying.
   String get messageText => switch (direction) {

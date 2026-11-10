@@ -60,9 +60,7 @@ void main() {
 
 /// Widget that fires an HTTP request through [Thunder.middleware] from
 /// [State.initState] — i.e. during the build phase.
-final class _RequestOnInit extends StatefulWidget {
-  const _RequestOnInit();
-
+final class const _RequestOnInit() extends StatefulWidget {
   @override
   State<_RequestOnInit> createState() => _RequestOnInitState();
 }

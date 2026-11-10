@@ -6,9 +6,7 @@ import '../models/thunder_network_log.dart';
 import 'colors.dart';
 
 /// Class that helps with various helper methods
-abstract class Helpers {
-  const Helpers._();
-
+abstract class const Helpers._() {
   static const int _kilobyteAsByte = 1_000;
   static const int _megabyteAsByte = 1_000_000;
 

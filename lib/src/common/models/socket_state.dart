@@ -7,38 +7,38 @@
 /// - [SocketConnected] — the connection is established
 /// - [SocketReconnecting] — the connection dropped and a retry is pending
 /// - [SocketDisconnected] — the connection is down
-sealed class SocketState {
+sealed class const SocketState() {
   /// Const constructor shared by all concrete states.
-  const SocketState();
+  this;
 }
 
 /// The initial connection attempt is in progress.
-final class SocketConnecting extends SocketState {
+final class const SocketConnecting() extends SocketState {
   /// Creates a [SocketConnecting] state.
-  const SocketConnecting();
+  this;
 
   @override
   String toString() => 'SocketConnecting()';
 }
 
 /// The connection is established and messages can be exchanged.
-final class SocketConnected extends SocketState {
+final class const SocketConnected() extends SocketState {
   /// Creates a [SocketConnected] state.
-  const SocketConnected();
+  this;
 
   @override
   String toString() => 'SocketConnected()';
 }
 
 /// The connection dropped and a reconnect attempt is pending or running.
-final class SocketReconnecting extends SocketState {
-  /// Creates a [SocketReconnecting] state for the given [attempt].
-  const SocketReconnecting({required this.attempt});
-
+final class const SocketReconnecting({
   /// The 1-based number of the pending reconnect attempt.
   ///
   /// Resets after every successful connection.
-  final int attempt;
+  required final int attempt,
+}) extends SocketState {
+  /// Creates a [SocketReconnecting] state for the given [attempt].
+  this;
 
   @override
   String toString() => 'SocketReconnecting(attempt: $attempt)';
@@ -48,19 +48,19 @@ final class SocketReconnecting extends SocketState {
 ///
 /// Carries optional details about why it went down: a close frame's
 /// [closeCode]/[closeReason] or the [error] that broke the connection.
-final class SocketDisconnected extends SocketState {
-  /// Creates a [SocketDisconnected] state.
-  const SocketDisconnected({this.closeCode, this.closeReason, this.error});
-
+final class const SocketDisconnected({
   /// The WebSocket close code, when a close frame was received or sent.
-  final int? closeCode;
+  final int? closeCode,
 
   /// The WebSocket close reason, when a close frame was received or sent.
-  final String? closeReason;
+  final String? closeReason,
 
   /// The error that caused the disconnect, when the connection failed
   /// rather than closed cleanly.
-  final Object? error;
+  final Object? error,
+}) extends SocketState {
+  /// Creates a [SocketDisconnected] state.
+  this;
 
   @override
   String toString() =>

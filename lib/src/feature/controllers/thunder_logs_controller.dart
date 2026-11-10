@@ -14,18 +14,15 @@ import 'thunder_log_notifier.dart';
 import 'thunder_ws_log_notifier.dart';
 
 /// The section (tab) of the Thunder logs screen.
-enum ThunderSection {
+enum ThunderSection(
+  /// The title shown on the section's tab.
+  final String title,
+) {
   /// HTTP request/response logs.
   http('HTTP'),
 
   /// WebSocket session logs.
   socket('Socket');
-
-  /// Constructor for the [ThunderSection] enum.
-  const ThunderSection(this.title);
-
-  /// The title shown on the section's tab.
-  final String title;
 
   /// Whether this is the HTTP section.
   bool get isHttp => this == ThunderSection.http;

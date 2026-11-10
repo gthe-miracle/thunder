@@ -7,9 +7,7 @@ import '../../common/utils/helpers.dart';
 import 'copyable_text.dart';
 
 /// Utility class with helper functions for JSON viewing.
-class JsonViewerUtils {
-  const JsonViewerUtils._();
-
+class const JsonViewerUtils._() {
   /// Returns true if [content] is expandable (i.e. a Map or List).
   static bool isExpandable(Object? content) =>
       content is Map || content is List;
@@ -33,12 +31,13 @@ class JsonViewerUtils {
 
 /// Main widget that displays a JSON structure in a
 /// hierarchical and interactive way.
-class JsonViewer extends StatelessWidget {
-  /// Constructor for the [JsonViewer] class.
-  const JsonViewer(this.jsonObj, {super.key});
-
+class const JsonViewer(
   /// The JSON object to display
-  final Object? jsonObj;
+  final Object? jsonObj, {
+  super.key,
+}) extends StatelessWidget {
+  /// Constructor for the [JsonViewer] class.
+  this;
 
   @override
   Widget build(BuildContext context) => _buildContent(jsonObj);
@@ -58,19 +57,16 @@ class JsonViewer extends StatelessWidget {
 }
 
 /// Widget for viewing JSON objects (Maps).
-class JsonObjectViewer extends StatefulWidget {
-  /// Constructor for the [JsonObjectViewer] class.
-  const JsonObjectViewer({
-    required this.jsonObj,
-    super.key,
-    this.notRoot = false,
-  });
-
+class const JsonObjectViewer({
   /// The JSON object to display
-  final Map<String, Object?> jsonObj;
+  required final Map<String, Object?> jsonObj,
+  super.key,
 
   /// Whether the JSON object is not the root object
-  final bool notRoot;
+  final bool notRoot = false,
+}) extends StatefulWidget {
+  /// Constructor for the [JsonObjectViewer] class.
+  this;
 
   @override
   JsonObjectViewerState createState() => JsonObjectViewerState();
@@ -236,19 +232,16 @@ class JsonObjectViewerState extends State<JsonObjectViewer> {
 }
 
 /// Widget for viewing JSON arrays (Lists).
-class JsonArrayViewer extends StatefulWidget {
-  /// Constructor for the [JsonArrayViewer] class.
-  const JsonArrayViewer({
-    required this.jsonArray,
-    super.key,
-    this.notRoot = false,
-  });
-
+class const JsonArrayViewer({
   /// The JSON array to display
-  final List<Object?> jsonArray;
+  required final List<Object?> jsonArray,
+  super.key,
 
   /// Whether the JSON array is not the root array
-  final bool notRoot;
+  final bool notRoot = false,
+}) extends StatefulWidget {
+  /// Constructor for the [JsonArrayViewer] class.
+  this;
 
   @override
   State<JsonArrayViewer> createState() => _JsonArrayViewerState();

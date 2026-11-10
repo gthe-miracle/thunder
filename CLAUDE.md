@@ -75,4 +75,5 @@ These apply to `lib/` and `test/`. `example/` has its own `analysis_options.yaml
 
 - Material widgets come from `package:material_ui/material_ui.dart` and Cupertino from `package:cupertino_ui/cupertino_ui.dart`, never the frozen SDK copies `package:flutter/material.dart` / `package:flutter/cupertino.dart`. The panel supplies both libraries' default localizations in `_ThunderState.build`, so it works under a host `MaterialApp` from either the SDK or `material_ui`.
 - Relative imports inside `lib/`; tests import `package:thunder/thunder.dart` and reach internals via `package:thunder/src/...`.
+- Classes use primary constructors (Dart 3.13): `class const X({required final T a, super.key}) extends Y { /// doc\n this; }`. A public primary constructor's doc comment goes on the `this;` body part (initializer lists and `super(...)` go there too, as `this : ...`); a bodiless one trips `public_member_api_docs`. Field docs go on the declaring parameters. Factories use the `factory name(...)` shorthand.
 - 80-column lines, expression-bodied members where possible, `on Object catch` instead of a bare `catch`, and `strict-casts` / `strict-raw-types` / `strict-inference`.

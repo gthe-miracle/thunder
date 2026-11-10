@@ -5,31 +5,25 @@ import '../../common/utils/helpers.dart';
 import 'copyable_text.dart';
 
 /// A widget that displays a row of text with an optional copy button.
-class ListRowItem extends StatefulWidget {
-  /// Constructor for the [ListRowItem] class.
-  const ListRowItem({
-    required this.value,
-    this.name,
-    this.showCopyButton = false,
-    this.showDivider = true,
-    this.isJson = false,
-    super.key,
-  });
+class const ListRowItem({
+  /// The value of the item
+  required final String? value,
 
   /// The name of the item
-  final String? name;
-
-  /// The value of the item
-  final String? value;
+  final String? name,
 
   /// Whether to show the copy button
-  final bool showCopyButton;
+  final bool showCopyButton = false,
 
   /// Whether to show the divider
-  final bool showDivider;
+  final bool showDivider = true,
 
   /// Whether the value is JSON
-  final bool isJson;
+  final bool isJson = false,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [ListRowItem] class.
+  this;
 
   @override
   State<ListRowItem> createState() => _ListRowItemState();

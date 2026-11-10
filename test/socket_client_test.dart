@@ -5,10 +5,7 @@ import 'package:thunder/thunder.dart';
 
 /// A local WebSocket echo server that can be shut down and rebound on the
 /// same port to exercise the reconnect path.
-final class EchoServer {
-  EchoServer._(this._server);
-
-  final HttpServer _server;
+final class EchoServer._(final HttpServer _server) {
   final List<WebSocket> _sockets = <WebSocket>[];
 
   int get port => _server.port;

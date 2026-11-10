@@ -12,9 +12,7 @@ import 'dart:convert';
 import 'package:material_ui/material_ui.dart';
 import 'package:thunder/thunder.dart';
 
-class WebSocketExamplePage extends StatefulWidget {
-  const WebSocketExamplePage({super.key});
-
+class const WebSocketExamplePage({super.key}) extends StatefulWidget {
   @override
   State<WebSocketExamplePage> createState() => _WebSocketExamplePageState();
 }
@@ -373,23 +371,14 @@ class _WebSocketExamplePageState extends State<WebSocketExamplePage> {
 
 enum _WsMessageType { sent, received, system }
 
-class _WsMessage {
-  const _WsMessage({
-    required this.text,
-    required this.type,
-    required this.timestamp,
-  });
+class const _WsMessage({
+  required final String text,
+  required final _WsMessageType type,
+  required final DateTime timestamp,
+});
 
-  final String text;
-  final _WsMessageType type;
-  final DateTime timestamp;
-}
-
-class _MessageBubble extends StatelessWidget {
-  const _MessageBubble({required this.message});
-
-  final _WsMessage message;
-
+class const _MessageBubble({required final _WsMessage message})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (message.type == _WsMessageType.system) {

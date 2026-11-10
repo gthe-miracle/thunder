@@ -6,12 +6,13 @@ import '../../common/utils/helpers.dart';
 import 'list_row_item.dart';
 
 /// A widget that displays an overview of a network log.
-class LogOverviewWidget extends StatelessWidget {
-  /// Constructor for the [LogOverviewWidget] class.
-  const LogOverviewWidget({required this.log, super.key});
-
+class const LogOverviewWidget({
   /// The network log to display
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
+  super.key,
+}) extends StatelessWidget {
+  /// Constructor for the [LogOverviewWidget] class.
+  this;
 
   @override
   Widget build(BuildContext context) => ListView(

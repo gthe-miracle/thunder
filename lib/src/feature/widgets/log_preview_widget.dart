@@ -9,12 +9,13 @@ import 'json_viewer.dart';
 import 'list_row_item.dart';
 
 /// A widget that displays a preview of a network log.
-class LogPreviewWidget extends StatefulWidget {
-  /// Constructor for the [LogPreviewWidget] class.
-  const LogPreviewWidget({required this.log, super.key});
-
+class const LogPreviewWidget({
   /// The network log to display
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [LogPreviewWidget] class.
+  this;
 
   @override
   State<LogPreviewWidget> createState() => _LogPreviewWidgetState();

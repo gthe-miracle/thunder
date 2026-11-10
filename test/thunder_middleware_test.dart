@@ -4,9 +4,7 @@ import 'package:thunder/src/common/models/thunder_network_log.dart';
 import 'package:thunder/src/common/utils/thunder_interceptor.dart';
 import 'package:thunder/thunder.dart';
 
-final class _TestException extends ApiClientException {
-  const _TestException();
-
+final class const _TestException() extends ApiClientException {
   @override
   int get statusCode => 404;
 

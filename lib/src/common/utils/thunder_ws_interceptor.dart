@@ -25,34 +25,29 @@ typedef ThunderWebSocketLogCallback = void Function(ThunderWebSocketLog log);
 /// interceptor.logSent('hello');
 /// channel.sink.add('hello');
 /// ```
-class ThunderWebSocketInterceptor {
-  /// Creates an interceptor for a single WebSocket connection to [uri].
-  ThunderWebSocketInterceptor({
-    required this.uri,
-    this.label,
-    this.onLog,
-    this.enabled = true,
-  }) : connectionId =
-           '${DateTime.now().microsecondsSinceEpoch}-${_connectionSeq++}';
-
+class ThunderWebSocketInterceptor({
   /// The remote endpoint of the connection.
-  final Uri uri;
+  required final Uri uri,
 
   /// Optional human-readable name for the session row.
-  final String? label;
+  final String? label,
 
   /// Callback invoked with every produced log event.
-  final ThunderWebSocketLogCallback? onLog;
-
-  /// Unique identifier of the connection (session) this interceptor logs.
-  final String connectionId;
+  final ThunderWebSocketLogCallback? onLog,
 
   /// Whether the interceptor records events.
   ///
   /// When `false` all `log*` calls are dropped and nothing reaches
   /// [onLog] — the connection leaves no trace in the Thunder panel.
   /// Mutable: flip at runtime to pause/resume recording.
-  bool enabled;
+  var bool enabled = true,
+}) {
+  /// Creates an interceptor for a single WebSocket connection to [uri].
+  this;
+
+  /// Unique identifier of the connection (session) this interceptor logs.
+  final String connectionId =
+      '${DateTime.now().microsecondsSinceEpoch}-${_connectionSeq++}';
 
   static int _connectionSeq = 0;
 

@@ -7,9 +7,9 @@ import '../widgets/log_button.dart';
 import '../widgets/socket_session_button.dart';
 
 /// Screen that shows the logs of the network requests
-class ThunderLogsScreen extends StatefulWidget {
+class const ThunderLogsScreen({super.key}) extends StatefulWidget {
   /// Constructor for the [ThunderLogsScreen] class.
-  const ThunderLogsScreen({super.key});
+  this;
 
   @override
   State<ThunderLogsScreen> createState() => _ThunderLogsScreenState();
@@ -119,12 +119,10 @@ class _ThunderLogsScreenState extends ThunderLogsController {
 }
 
 /// Placeholder shown when a section has no logs yet.
-class _EmptyState extends StatelessWidget {
-  const _EmptyState({required this.icon, required this.message});
-
-  final IconData icon;
-  final String message;
-
+class const _EmptyState({
+  required final IconData icon,
+  required final String message,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
     child: Column(

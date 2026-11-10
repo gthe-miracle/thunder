@@ -4,15 +4,16 @@ import 'package:material_ui/material_ui.dart';
 import '../../common/utils/colors.dart';
 
 /// A custom selectable text widget that displays a string with a copy button.
-class CopyableText extends StatefulWidget {
-  /// Constructor for the [CopyableText] class.
-  const CopyableText({required this.value, this.style, super.key});
-
+class const CopyableText({
   /// The value of the text.
-  final String? value;
+  required final String? value,
 
   /// The style of the text.
-  final TextStyle? style;
+  final TextStyle? style,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [CopyableText] class.
+  this;
 
   @override
   State<CopyableText> createState() => _CopyableTextState();

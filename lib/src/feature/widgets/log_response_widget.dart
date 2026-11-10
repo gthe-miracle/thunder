@@ -11,12 +11,13 @@ import 'copyable_text.dart';
 import 'list_row_item.dart';
 
 /// A widget that displays the response of a network request.
-class LogResponseWidget extends StatefulWidget {
-  /// Constructor for the [LogResponseWidget] class.
-  const LogResponseWidget({required this.log, super.key});
-
+class const LogResponseWidget({
   /// The network log to display
-  final ThunderNetworkLog log;
+  required final ThunderNetworkLog log,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [LogResponseWidget] class.
+  this;
 
   @override
   State<LogResponseWidget> createState() => _LogResponseWidgetState();

@@ -41,41 +41,35 @@ import '../screens/thunder_logs_screen.dart';
 /// // This will work even before a Thunder widget is created
 /// final client = ApiClient(middleware: Thunder.middleware);
 /// ```
-class Thunder extends StatefulWidget {
-  /// Constructor for the [Thunder] class.
-  const Thunder({
-    required this.child,
-    this.enabled = kDebugMode,
-    this.fontFamily = 'FreeMono',
-    this.duration = const Duration(milliseconds: 250),
-    this.color,
-    super.key,
-  });
+class const Thunder({
+  /// The child widget (the main widget of the app).
+  ///
+  /// This is typically the root of your application that Thunder will wrap.
+  required final Widget child,
 
   /// Whether to enable the overlay.
   ///
   /// When false, the Thunder widget simply returns
   /// the child without any overlay functionality.
   /// Defaults to [kDebugMode] which means it's only enabled in debug builds.
-  final bool enabled;
+  final bool enabled = kDebugMode,
+
+  /// The font family of the [Thunder] logs.
+  final String fontFamily = 'FreeMono',
 
   /// The duration of the overlay animation.
   ///
   /// Controls how quickly the overlay slides in and out.
-  final Duration duration;
+  final Duration duration = const Duration(milliseconds: 250),
 
   /// The color of the [Thunder] handle.
   ///
   /// When null, the handle uses the ambient [Material] default color.
-  final Color? color;
-
-  /// The font family of the [Thunder] logs.
-  final String fontFamily;
-
-  /// The child widget (the main widget of the app).
-  ///
-  /// This is typically the root of your application that Thunder will wrap.
-  final Widget child;
+  final Color? color,
+  super.key,
+}) extends StatefulWidget {
+  /// Constructor for the [Thunder] class.
+  this;
 
   /// Add this middleware to your ApiClient instances.
   ///

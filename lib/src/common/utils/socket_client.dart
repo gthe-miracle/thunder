@@ -41,46 +41,37 @@ import 'thunder_ws_interceptor.dart';
 /// - [messages] and [states] are broadcast streams without replay:
 ///   subscribe before calling [connect] to observe the first events, and
 ///   read [state] for the current value.
-class SocketClient {
+class SocketClient({
+  /// The WebSocket endpoint to connect to.
+  required final Uri uri,
+
+  /// WebSocket subprotocols to negotiate, if any.
+  final Iterable<String>? protocols,
+
+  /// Extra HTTP headers for the upgrade request.
+  ///
+  /// Only supported on `dart:io` platforms; browsers ignore this.
+  final Map<String, Object?>? headers,
+
+  /// Delay between a connection loss and the next reconnect attempt.
+  final Duration reconnectInterval = const Duration(seconds: 5),
+
+  /// Maximum time a single connection attempt may take before it is
+  /// aborted and retried. Defaults to 30 seconds when `null`.
+  final Duration? connectTimeout,
+
+  /// Interval of protocol-level ping frames keeping the connection alive.
+  ///
+  /// Only supported on `dart:io` platforms; browsers ignore this.
+  final Duration? pingInterval,
+  final ThunderWebSocketInterceptor? _interceptor,
+}) {
   /// Creates a client for [uri].
   ///
   /// No network activity happens until [connect] is called. Pass an
   /// `interceptor` to record the connection in Thunder's Socket tab —
   /// `Thunder.socketClient` does that for you.
-  SocketClient({
-    required this.uri,
-    this.protocols,
-    this.headers,
-    this.reconnectInterval = const Duration(seconds: 5),
-    this.connectTimeout,
-    this.pingInterval,
-    this._interceptor,
-  });
-
-  /// The WebSocket endpoint to connect to.
-  final Uri uri;
-
-  /// WebSocket subprotocols to negotiate, if any.
-  final Iterable<String>? protocols;
-
-  /// Extra HTTP headers for the upgrade request.
-  ///
-  /// Only supported on `dart:io` platforms; browsers ignore this.
-  final Map<String, Object?>? headers;
-
-  /// Delay between a connection loss and the next reconnect attempt.
-  final Duration reconnectInterval;
-
-  /// Maximum time a single connection attempt may take before it is
-  /// aborted and retried. Defaults to 30 seconds when `null`.
-  final Duration? connectTimeout;
-
-  /// Interval of protocol-level ping frames keeping the connection alive.
-  ///
-  /// Only supported on `dart:io` platforms; browsers ignore this.
-  final Duration? pingInterval;
-
-  final ThunderWebSocketInterceptor? _interceptor;
+  this;
 
   final StreamController<Object?> _messagesController =
       StreamController<Object?>.broadcast();

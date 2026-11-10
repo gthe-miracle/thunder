@@ -5,26 +5,51 @@ import 'package:material_ui/material_ui.dart';
 /// Logger colors for the application:
 /// {@endtemplate}
 @immutable
-final class ThunderColors extends ThemeExtension<ThunderColors> {
+final class const ThunderColors({
+  /// The white color of the thunder.
+  required final Color cWhite,
+
+  /// The black color of the thunder.
+  required final Color cBlack,
+
+  /// The yellow color of the thunder.
+  required final Color cYellow,
+
+  /// The red color of the thunder.
+  required final Color cRed,
+
+  /// The green color of the thunder.
+  required final Color cGreen,
+
+  /// The magenta color of the thunder.
+  required final Color cMagenta,
+
+  /// The blue color of the thunder.
+  required final Color cBlue,
+
+  /// The cyan color of the thunder.
+  required final Color cCyan,
+
+  /// The default color of the thunder.
+  required final Color cDefault,
+
+  /// The background color of the thunder.
+  required final Color thunderBackground,
+
+  /// The brilliant azure color.
+  required final Color brilliantAzure,
+
+  /// The gray color.
+  required final Color gray,
+
+  /// The elevated surface color (cards, buttons, handle, snackbar).
+  required final Color surface,
+}) extends ThemeExtension<ThunderColors> {
   /// {@macro app_colors}
-  const ThunderColors({
-    required this.cWhite,
-    required this.cBlack,
-    required this.cYellow,
-    required this.cRed,
-    required this.cGreen,
-    required this.cMagenta,
-    required this.cBlue,
-    required this.cCyan,
-    required this.cDefault,
-    required this.thunderBackground,
-    required this.brilliantAzure,
-    required this.gray,
-    required this.surface,
-  });
+  this;
 
   /// Gets the logger colors from the theme.
-  factory ThunderColors.of(BuildContext context) {
+  factory of(BuildContext context) {
     try {
       final theme = Theme.of(context);
 
@@ -37,45 +62,6 @@ final class ThunderColors extends ThemeExtension<ThunderColors> {
       return ThunderColors.light;
     }
   }
-
-  /// The background color of the thunder.
-  final Color thunderBackground;
-
-  /// The white color of the thunder.
-  final Color cWhite;
-
-  /// The black color of the thunder.
-  final Color cBlack;
-
-  /// The yellow color of the thunder.
-  final Color cYellow;
-
-  /// The red color of the thunder.
-  final Color cRed;
-
-  /// The green color of the thunder.
-  final Color cGreen;
-
-  /// The magenta color of the thunder.
-  final Color cMagenta;
-
-  /// The blue color of the thunder.
-  final Color cBlue;
-
-  /// The cyan color of the thunder.
-  final Color cCyan;
-
-  /// The default color of the thunder.
-  final Color cDefault;
-
-  /// The brilliant azure color.
-  final Color brilliantAzure;
-
-  /// The gray color.
-  final Color gray;
-
-  /// The elevated surface color (cards, buttons, handle, snackbar).
-  final Color surface;
 
   /// The default light theme colors.
   static const light = ThunderColors(
